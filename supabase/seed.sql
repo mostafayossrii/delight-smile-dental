@@ -23,21 +23,21 @@ VALUES (
   0.00
 );
 
--- Official Clinical Procedures Catalog (Dr. Omar Salem)
-INSERT INTO procedures (code, name_ar, name_en, category, estimated_duration_minutes) VALUES
-  ('COMP-REST', 'حشو كومبوزيت تجميلي', 'Composite Restoration', 'Restorative', 45),
-  ('COMP-VEN', 'فينير كومبوزيت تجميلي', 'Composite veneer', 'Cosmetic', 60),
-  ('ENDO-TRT', 'علاج جذور وعصب الأسنان', 'Endodontic treatment', 'Endodontics', 60),
-  ('PULPOTOMY', 'بتر لب السن (علاج أسنان الأطفال)', 'Pulpotomy', 'Pediatric', 30),
-  ('PULPECTOMY', 'استئصال لب السن الجذري', 'Pulpectomy', 'Pediatric/Endo', 45),
-  ('EXTRACT', 'خلع أسنان وجراحة الفم', 'Extraction', 'Surgery', 30),
-  ('CROWN-REST', 'تركيبات التيجان والجسور الثابتة', 'Crown restoration', 'Prosthodontics', 45),
-  ('PORC-VEN', 'عدسات الفينير الخزفي E-Max', 'Veneers', 'Cosmetic', 60),
-  ('DENT-COMPL', 'طقم أسنان صناعي كامل', 'Complete denture', 'Removable Prosthodontics', 60),
-  ('DENT-SNGL', 'طقم أسنان أحادي', 'Single denture', 'Removable Prosthodontics', 45),
-  ('DENT-PART', 'طقم أسنان صناعي جزئي', 'Partial denture', 'Removable Prosthodontics', 45),
-  ('SCALING', 'تنظيف الجير وتلميع الأسنان وعلاج اللثة', 'Scaling', 'Preventive', 30),
-  ('WHITENING', 'تبييض الأسنان الاحترافي بالليزر', 'Whitening', 'Cosmetic', 45)
+-- Official Clinical Services / Procedures Catalog (Dr. Omar Salem)
+INSERT INTO services (branch_id, code, category, name_ar, name_en, default_price, default_duration_mins) VALUES
+  ('11111111-1111-1111-1111-111111111111', 'COMP-REST', 'Restorative', 'حشو كومبوزيت تجميلي', 'Composite Restoration', 1200.00, 45),
+  ('11111111-1111-1111-1111-111111111111', 'COMP-VEN', 'Cosmetic', 'فينير كومبوزيت تجميلي', 'Composite veneer', 2500.00, 60),
+  ('11111111-1111-1111-1111-111111111111', 'ENDO-TRT', 'Endodontics', 'علاج جذور وعصب الأسنان', 'Endodontic treatment', 3500.00, 60),
+  ('11111111-1111-1111-1111-111111111111', 'PULPOTOMY', 'Pediatric', 'بتر لب السن (علاج أسنان الأطفال)', 'Pulpotomy', 1000.00, 30),
+  ('11111111-1111-1111-1111-111111111111', 'PULPECTOMY', 'Pediatric', 'استئصال لب السن الجذري', 'Pulpectomy', 1500.00, 45),
+  ('11111111-1111-1111-1111-111111111111', 'EXTRACT', 'Surgery', 'خلع أسنان وجراحة الفم', 'Extraction', 800.00, 30),
+  ('11111111-1111-1111-1111-111111111111', 'CROWN-REST', 'Prosthodontics', 'تركيبات التيجان والجسور الثابتة', 'Crown restoration', 3800.00, 45),
+  ('11111111-1111-1111-1111-111111111111', 'PORC-VEN', 'Cosmetic', 'عدسات الفينير الخزفي E-Max', 'Veneers', 6500.00, 60),
+  ('11111111-1111-1111-1111-111111111111', 'DENT-COMPL', 'Prosthodontics', 'طقم أسنان صناعي كامل', 'Complete denture', 15000.00, 60),
+  ('11111111-1111-1111-1111-111111111111', 'DENT-SNGL', 'Prosthodontics', 'طقم أسنان أحادي', 'Single denture', 5000.00, 45),
+  ('11111111-1111-1111-1111-111111111111', 'DENT-PART', 'Prosthodontics', 'طقم أسنان صناعي جزئي', 'Partial denture', 8000.00, 45),
+  ('11111111-1111-1111-1111-111111111111', 'SCALING', 'Preventive', 'تنظيف الجير وتلميع الأسنان وعلاج اللثة', 'Scaling', 900.00, 30),
+  ('11111111-1111-1111-1111-111111111111', 'WHITENING', 'Cosmetic', 'تبييض الأسنان الاحترافي بالليزر', 'Whitening', 4500.00, 45)
 ON CONFLICT (code) DO NOTHING;
 
 -- Roles (6 Staff Roles + Patient Role)

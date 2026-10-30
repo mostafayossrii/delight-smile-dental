@@ -9,7 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "btree_gist";
 
 -- 0. Clinic Branches & Settings
 CREATE TABLE branches (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   code TEXT UNIQUE NOT NULL,
   name_ar TEXT NOT NULL,
   name_en TEXT NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE branches (
 );
 
 CREATE TABLE clinic_settings (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id) ON DELETE CASCADE,
   clinic_name_ar TEXT NOT NULL DEFAULT 'عيادة Delight Smile - د. عمر سالم',
   clinic_name_en TEXT NOT NULL DEFAULT 'Delight Smile Dental Clinic - Dr. Omar Salem',
@@ -50,7 +50,7 @@ CREATE TABLE profiles (
 );
 
 CREATE TABLE roles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   code TEXT UNIQUE NOT NULL, -- admin, dentist, receptionist, assistant, accountant, inventory_manager, patient
   name_ar TEXT NOT NULL,
   name_en TEXT NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE permissions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   code TEXT UNIQUE NOT NULL, -- e.g. patients.read, odontogram.write, finance.manage
   module TEXT NOT NULL,
   description TEXT NOT NULL
@@ -80,7 +80,7 @@ CREATE TABLE profile_roles (
 
 -- 2. Dentists & Rooms/Chairs
 CREATE TABLE dentists (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   profile_id UUID UNIQUE NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   branch_id UUID NOT NULL REFERENCES branches(id),
   specialty_ar TEXT NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE dentists (
 
 -- 3. Patients, Portal Account Linking & Medical History
 CREATE TABLE patients (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   patient_number TEXT UNIQUE NOT NULL, -- e.g. DS-1001
   full_name TEXT NOT NULL,
@@ -120,7 +120,7 @@ CREATE INDEX idx_patients_lookup ON patients(patient_number, phone, full_name);
 
 -- Secure Patient Portal Linking (Requires verified one-time invitation code, never auto-claimed by phone/name alone)
 CREATE TABLE patient_user_links (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID UNIQUE NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   profile_id UUID UNIQUE REFERENCES profiles(id) ON DELETE CASCADE,
   verification_code_hash TEXT NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE patient_user_links (
 );
 
 CREATE TABLE medical_histories (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   conditions JSONB NOT NULL DEFAULT '[]',
   current_medications JSONB NOT NULL DEFAULT '[]',
@@ -147,7 +147,7 @@ CREATE TABLE medical_histories (
 );
 
 CREATE TABLE allergies (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   allergen TEXT NOT NULL,
   severity TEXT NOT NULL CHECK (severity IN ('low', 'moderate', 'high', 'critical')),
@@ -158,7 +158,7 @@ CREATE TABLE allergies (
 
 -- 4. Configurable Services / Procedure Catalog
 CREATE TABLE services (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   code TEXT UNIQUE NOT NULL,
   category TEXT NOT NULL,
@@ -172,7 +172,7 @@ CREATE TABLE services (
 
 -- 5. Appointments & Conflict Prevention
 CREATE TABLE appointments (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   dentist_id UUID NOT NULL REFERENCES dentists(id),
@@ -210,7 +210,7 @@ ALTER TABLE appointments
   ) WHERE (status NOT IN ('cancelled', 'no_show'));
 
 CREATE TABLE appointment_status_history (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   appointment_id UUID NOT NULL REFERENCES appointments(id) ON DELETE CASCADE,
   old_status TEXT,
   new_status TEXT NOT NULL,
@@ -221,7 +221,7 @@ CREATE TABLE appointment_status_history (
 
 -- 6. Clinical Encounters (Versioned & Auditable)
 CREATE TABLE clinical_encounters (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   dentist_id UUID NOT NULL REFERENCES dentists(id),
   appointment_id UUID REFERENCES appointments(id),
@@ -258,7 +258,7 @@ CREATE TABLE teeth (
 );
 
 CREATE TABLE odontogram_findings (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   fdi_number INTEGER NOT NULL REFERENCES teeth(fdi_number),
   surface TEXT NOT NULL DEFAULT 'WHOLE' CHECK (surface IN ('WHOLE', 'M', 'D', 'O', 'I', 'B', 'F', 'L', 'P')),
@@ -276,7 +276,7 @@ CREATE INDEX idx_odontogram_patient ON odontogram_findings(patient_id, fdi_numbe
 
 -- 8. Treatment Plans, Plan Items & Completed Procedures
 CREATE TABLE treatment_plans (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   dentist_id UUID NOT NULL REFERENCES dentists(id),
   title TEXT NOT NULL,
@@ -296,7 +296,7 @@ CREATE TABLE treatment_plans (
 );
 
 CREATE TABLE treatment_plan_items (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   treatment_plan_id UUID NOT NULL REFERENCES treatment_plans(id) ON DELETE CASCADE,
   service_id UUID NOT NULL REFERENCES services(id),
   fdi_number INTEGER REFERENCES teeth(fdi_number),
@@ -315,7 +315,7 @@ CREATE TABLE treatment_plan_items (
 
 -- Completed Procedures recorded separately from proposed plan items
 CREATE TABLE procedures (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   encounter_id UUID REFERENCES clinical_encounters(id),
   treatment_plan_item_id UUID REFERENCES treatment_plan_items(id),
@@ -330,7 +330,7 @@ CREATE TABLE procedures (
 
 -- 9. Prescriptions, Consent Forms & Private Documents
 CREATE TABLE prescriptions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   encounter_id UUID REFERENCES clinical_encounters(id),
   dentist_id UUID NOT NULL REFERENCES dentists(id),
@@ -342,7 +342,7 @@ CREATE TABLE prescriptions (
 );
 
 CREATE TABLE consent_forms (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   treatment_plan_id UUID REFERENCES treatment_plans(id),
   title TEXT NOT NULL,
@@ -354,7 +354,7 @@ CREATE TABLE consent_forms (
 );
 
 CREATE TABLE patient_documents (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   uploaded_by UUID REFERENCES profiles(id),
   document_type TEXT NOT NULL CHECK (document_type IN ('xray', 'cbct', 'photo', 'consent', 'lab_sheet', 'other')),
@@ -368,7 +368,7 @@ CREATE TABLE patient_documents (
 
 -- 10. Dental Laboratories & Lab Orders
 CREATE TABLE laboratories (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   name TEXT NOT NULL,
   phone TEXT,
@@ -379,7 +379,7 @@ CREATE TABLE laboratories (
 );
 
 CREATE TABLE laboratory_orders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   dentist_id UUID NOT NULL REFERENCES dentists(id),
@@ -404,7 +404,7 @@ CREATE TABLE laboratory_orders (
 -- 11. Billing, Invoices, Payments, Refunds, Expenses & Dentist Commissions
 -- Rule: Proposed treatments are NEVER counted as revenue. Only finalized invoices from completed procedures/services count as billed, and only recorded payments minus refunds count as collected revenue.
 CREATE TABLE invoices (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   invoice_number TEXT UNIQUE NOT NULL,
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
@@ -425,7 +425,7 @@ CREATE TABLE invoices (
 );
 
 CREATE TABLE invoice_items (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   invoice_id UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
   procedure_id UUID REFERENCES procedures(id),
   service_id UUID REFERENCES services(id),
@@ -436,7 +436,7 @@ CREATE TABLE invoice_items (
 );
 
 CREATE TABLE payments (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   invoice_id UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
   patient_id UUID NOT NULL REFERENCES patients(id),
   amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
@@ -447,7 +447,7 @@ CREATE TABLE payments (
 );
 
 CREATE TABLE refunds (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   payment_id UUID NOT NULL REFERENCES payments(id),
   invoice_id UUID NOT NULL REFERENCES invoices(id),
   patient_id UUID NOT NULL REFERENCES patients(id),
@@ -458,7 +458,7 @@ CREATE TABLE refunds (
 );
 
 CREATE TABLE expenses (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   category TEXT NOT NULL,
   title TEXT NOT NULL,
@@ -471,7 +471,7 @@ CREATE TABLE expenses (
 );
 
 CREATE TABLE dentist_commissions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   dentist_id UUID NOT NULL REFERENCES dentists(id),
   invoice_id UUID NOT NULL REFERENCES invoices(id),
   payment_id UUID REFERENCES payments(id),
@@ -484,7 +484,7 @@ CREATE TABLE dentist_commissions (
 
 -- 12. Dental Inventory, Batches, Suppliers & Purchase Orders
 CREATE TABLE suppliers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   name TEXT NOT NULL,
   phone TEXT,
@@ -495,7 +495,7 @@ CREATE TABLE suppliers (
 );
 
 CREATE TABLE inventory_items (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   sku TEXT UNIQUE NOT NULL,
   name_ar TEXT NOT NULL,
@@ -510,7 +510,7 @@ CREATE TABLE inventory_items (
 );
 
 CREATE TABLE inventory_batches (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   item_id UUID NOT NULL REFERENCES inventory_items(id) ON DELETE CASCADE,
   batch_number TEXT NOT NULL,
   expiry_date DATE NOT NULL,
@@ -520,7 +520,7 @@ CREATE TABLE inventory_batches (
 );
 
 CREATE TABLE stock_movements (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   item_id UUID NOT NULL REFERENCES inventory_items(id) ON DELETE CASCADE,
   batch_id UUID REFERENCES inventory_batches(id),
   movement_type TEXT NOT NULL CHECK (movement_type IN ('receipt', 'consumption', 'adjustment', 'discard_expired')),
@@ -531,7 +531,7 @@ CREATE TABLE stock_movements (
 );
 
 CREATE TABLE purchase_orders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id),
   supplier_id UUID NOT NULL REFERENCES suppliers(id),
   po_number TEXT UNIQUE NOT NULL,
@@ -544,7 +544,7 @@ CREATE TABLE purchase_orders (
 
 -- 13. Notifications & Immutable Audit Logs
 CREATE TABLE notifications (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   recipient_profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
   patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
   channel TEXT NOT NULL DEFAULT 'in_app' CHECK (channel IN ('in_app', 'email', 'sms', 'whatsapp', 'push')),
@@ -560,7 +560,7 @@ CREATE TABLE notifications (
 );
 
 CREATE TABLE audit_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   actor_profile_id UUID REFERENCES profiles(id),
   actor_role TEXT,
   action TEXT NOT NULL,

@@ -6,7 +6,7 @@
 
 -- 1. Clinic Treatment Rooms & Physical Equipment Assets
 CREATE TABLE IF NOT EXISTS clinic_rooms (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id) ON DELETE CASCADE,
   room_code TEXT NOT NULL,
   name_ar TEXT NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS clinic_rooms (
 );
 
 CREATE TABLE IF NOT EXISTS equipment_assets (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id) ON DELETE CASCADE,
   room_id UUID REFERENCES clinic_rooms(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS equipment_assets (
 
 -- 2. Dentist Leaves and Blocked Scheduling Periods
 CREATE TABLE IF NOT EXISTS dentist_leaves (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   dentist_id UUID NOT NULL REFERENCES dentists(id) ON DELETE CASCADE,
   starts_at TIMESTAMPTZ NOT NULL,
   ends_at TIMESTAMPTZ NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS dentist_leaves (
 
 -- 3. Treasuries & Cash/Bank Movements
 CREATE TABLE IF NOT EXISTS treasuries (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id) ON DELETE CASCADE,
   code TEXT UNIQUE NOT NULL,
   name_ar TEXT NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS treasuries (
 );
 
 CREATE TABLE IF NOT EXISTS treasury_transactions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   treasury_id UUID NOT NULL REFERENCES treasuries(id) ON DELETE CASCADE,
   transaction_type TEXT NOT NULL CHECK (transaction_type IN ('income', 'expense', 'transfer_in', 'transfer_out', 'refund_payout')),
   amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS treasury_transactions (
 
 -- 4. Insurance Companies, Policies & Claims
 CREATE TABLE IF NOT EXISTS insurance_companies (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id) ON DELETE CASCADE,
   code TEXT UNIQUE NOT NULL,
   name_ar TEXT NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS insurance_companies (
 );
 
 CREATE TABLE IF NOT EXISTS insurance_policies (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   company_id UUID NOT NULL REFERENCES insurance_companies(id) ON DELETE CASCADE,
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   policy_number TEXT NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS insurance_policies (
 );
 
 CREATE TABLE IF NOT EXISTS insurance_claims (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   policy_id UUID NOT NULL REFERENCES insurance_policies(id) ON DELETE CASCADE,
   invoice_id UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS insurance_claims (
 
 -- 5. Laser Devices & Pulse Count Auditing
 CREATE TABLE IF NOT EXISTS laser_devices (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id) ON DELETE CASCADE,
   room_id UUID REFERENCES clinic_rooms(id) ON DELETE SET NULL,
   model_name TEXT NOT NULL, -- e.g. Diode Laser 980nm, Epic Pro
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS laser_devices (
 );
 
 CREATE TABLE IF NOT EXISTS laser_pulse_sessions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   device_id UUID NOT NULL REFERENCES laser_devices(id) ON DELETE CASCADE,
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   dentist_id UUID NOT NULL REFERENCES dentists(id) ON DELETE CASCADE,
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS laser_pulse_sessions (
 
 -- 6. Staff GPS Attendance & Work Shifts
 CREATE TABLE IF NOT EXISTS staff_attendance (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   branch_id UUID NOT NULL REFERENCES branches(id) ON DELETE CASCADE,
   check_in_time TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS staff_attendance (
 
 -- 7. Internal Team Messaging & Announcements
 CREATE TABLE IF NOT EXISTS internal_conversations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   branch_id UUID NOT NULL REFERENCES branches(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   is_general_channel BOOLEAN NOT NULL DEFAULT false,
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS internal_conversations (
 );
 
 CREATE TABLE IF NOT EXISTS internal_messages (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   conversation_id UUID NOT NULL REFERENCES internal_conversations(id) ON DELETE CASCADE,
   sender_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   message_text TEXT NOT NULL,
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS internal_messages (
 
 -- 8. Patient Loyalty & VIP Reward Points Ledger
 CREATE TABLE IF NOT EXISTS patient_loyalty_transactions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
   invoice_id UUID REFERENCES invoices(id) ON DELETE SET NULL,
   points_change INTEGER NOT NULL, -- Positive for earn, negative for redeem

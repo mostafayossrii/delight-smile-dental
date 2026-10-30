@@ -34,3 +34,7 @@ next-env.d.ts
 
 # zip backups
 *.zip
+
+# supabase CLI temp
+supabase/.temp/
+

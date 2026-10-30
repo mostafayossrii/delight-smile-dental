@@ -67,7 +67,7 @@ class AppConstants {
   ];
 
   // Supabase defaults
-  static const String defaultSupabaseUrl = 'https://delight-smile-dental.supabase.co';
-  static const String defaultAnonKey = 'dummy_anon_key';
+  static const String defaultSupabaseUrl = 'https://uujtikjqzeqgbhtudlxc.supabase.co';
+  static const String defaultAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1anRpa2pxemVxZ2JodHVkbHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzNjg2OTQsImV4cCI6MjEwODk0NDY5NH0.ZCT-GP5qEaZHpFGMRup0oBzdpiu3RQqhRsffq0Y97_Q';
   static const String storageBucket = 'clinical-private';
 }
