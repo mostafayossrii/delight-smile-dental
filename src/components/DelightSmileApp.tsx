@@ -815,6 +815,117 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
 
         {/* Quick Toolbar + Role Switcher + Lang/Theme */}
         <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            onClick={() => {
+              setModalTitle('تسجيل حساب مريض جديد (Patient Registration)');
+              setModalContent(
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget;
+                    const payload = {
+                      fullName: (form.elements.namedItem('pName') as HTMLInputElement).value,
+                      phone: (form.elements.namedItem('pPhone') as HTMLInputElement).value,
+                      email: (form.elements.namedItem('pEmail') as HTMLInputElement).value,
+                      password: (form.elements.namedItem('pPass') as HTMLInputElement).value,
+                      gender: (form.elements.namedItem('pGender') as HTMLSelectElement).value,
+                      dateOfBirth: (form.elements.namedItem('pDob') as HTMLInputElement).value,
+                      emergencyContactName: (form.elements.namedItem('pEmergName') as HTMLInputElement).value,
+                      emergencyContactPhone: (form.elements.namedItem('pEmergPhone') as HTMLInputElement).value,
+                      preferredBranch: currentBranch
+                    };
+
+                    try {
+                      const res = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                      });
+                      const data = await res.json();
+                      if (!res.ok) {
+                        showToast(`فشل التسجيل: ${data.error}`, 'error');
+                        return;
+                      }
+                      showToast(`تم تسجيل المريض بنجاح! كود التحقق: ${data.verificationCode}`, 'success');
+                      setPatients((prev) => [
+                        ...prev,
+                        {
+                          id: data.patient.id,
+                          name: data.patient.fullName,
+                          phone: data.patient.phone,
+                          age: 30,
+                          gender: data.patient.gender === 'male' ? 'ذكر' : 'أنثى',
+                          area: 'الإسكندرية',
+                          insurance: 'نقدي (عام)',
+                          membershipNo: '-',
+                          points: 100,
+                          usedPoints: 0,
+                          creditBalance: 0,
+                          medicalHistory: ['سجل جديد'],
+                          notes: 'تم التسجيل عبر بوابة المرضى الذكية',
+                          teethStatus: {},
+                          treatmentSteps: [],
+                          prescriptions: [],
+                          consents: []
+                        }
+                      ]);
+                      setModalOpen(false);
+                    } catch {
+                      showToast('فشل في الاتصال بخادم التسجيل', 'error');
+                    }
+                  }}
+                  className="space-y-3 text-xs"
+                >
+                  <div>
+                    <label className="block text-slate-300 mb-1">الاسم الثلاثي بالكامل:</label>
+                    <input name="pName" required placeholder="مثال: ياسمين أحمد محمود" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-slate-300 mb-1">رقم الموبايل:</label>
+                      <input name="pPhone" required placeholder="+201012345678" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white font-mono" />
+                    </div>
+                    <div>
+                      <label className="block text-slate-300 mb-1">البريد الإلكتروني:</label>
+                      <input name="pEmail" type="email" required placeholder="patient@example.com" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-slate-300 mb-1">كلمة المرور:</label>
+                      <input name="pPass" type="password" required minLength={8} placeholder="8 خانات على الأقل" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white font-mono" />
+                    </div>
+                    <div>
+                      <label className="block text-slate-300 mb-1">النوع:</label>
+                      <select name="pGender" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white">
+                        <option value="female">أنثى</option>
+                        <option value="male">ذكر</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-slate-300 mb-1">تاريخ الميلاد:</label>
+                      <input name="pDob" type="date" defaultValue="1995-06-15" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white" />
+                    </div>
+                    <div>
+                      <label className="block text-slate-300 mb-1">هاتف الطوارئ:</label>
+                      <input name="pEmergPhone" placeholder="+201099887766" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white font-mono" />
+                    </div>
+                  </div>
+                  <button type="submit" className="w-full py-2.5 rounded-xl gold-gradient text-obsidian-950 font-extrabold shadow mt-2">
+                    إنشاء حساب مريض والتحقق الفوري
+                  </button>
+                </form>
+              );
+              setModalOpen(true);
+            }}
+            className="px-2.5 py-1.5 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-gold-300 border border-gold-500/30 text-[11px] font-bold flex items-center gap-1"
+          >
+            <i className="fa-solid fa-user-plus"></i>
+            <span className="hidden sm:inline">تسجيل مريض</span>
+          </button>
+
           <select
             value={currentRole}
             onChange={(e) => {

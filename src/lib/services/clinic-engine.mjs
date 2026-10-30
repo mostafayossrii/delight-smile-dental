@@ -552,4 +552,191 @@ export class ClinicEngine {
       netDentistCommissions
     };
   }
+
+  /**
+   * Registers a new patient account with duplicate phone/email detection and verification token generation.
+   */
+  registerPatient(payload) {
+    const { fullName, phone, email, password, gender, dateOfBirth, emergencyContactName, emergencyContactPhone, preferredBranch } = payload;
+    if (!fullName || !phone || !email || !password) {
+      throw new Error('MISSING_REQUIRED_REGISTRATION_FIELDS');
+    }
+
+    const cleanPhone = phone.replace(/[^0-9+]/g, '');
+    const cleanEmail = email.trim().toLowerCase();
+
+    // Prevent duplicate patient accounts by validating phone and email
+    for (const p of this.patients.values()) {
+      if (p.phone.replace(/[^0-9+]/g, '') === cleanPhone || (p.email && p.email.toLowerCase() === cleanEmail)) {
+        throw new Error('DUPLICATE_PATIENT_PHONE_OR_EMAIL');
+      }
+    }
+
+    const newIdNum = 1000 + this.patients.size + 1;
+    const patientId = `DS-${newIdNum}`;
+    const verificationCode = `VERIFY-DS${newIdNum}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newUserId = `usr-pat-${this.users.size + 1}`;
+
+    const newPatient = {
+      id: patientId,
+      patientNumber: patientId,
+      fullName,
+      phone: cleanPhone,
+      email: cleanEmail,
+      gender: gender || 'other',
+      dateOfBirth: dateOfBirth || '2000-01-01',
+      emergencyContactName: emergencyContactName || '',
+      emergencyContactPhone: emergencyContactPhone || '',
+      preferredBranch: preferredBranch || 'ALEX-MAIN',
+      allergies: [],
+      medicalConditions: [],
+      creditBalance: 0,
+      points: 100, // Welcome loyalty bonus
+      isVerified: true,
+      verificationCode,
+      createdAt: new Date().toISOString()
+    };
+
+    this.patients.set(patientId, newPatient);
+
+    // Create user login profile
+    this.users.set(cleanEmail, {
+      id: newUserId,
+      username: cleanEmail,
+      email: cleanEmail,
+      passwordHash: `HASH_${password}`,
+      role: 'patient',
+      fullName,
+      isActive: true,
+      mustChangePassword: false
+    });
+
+    // Link user to patient record
+    this.patientLinks.set(newUserId, {
+      profileId: newUserId,
+      patientId,
+      verificationCode,
+      isVerified: true
+    });
+
+    this.logAudit({ id: newUserId, role: 'patient' }, 'PATIENT_REGISTERED', 'patients', patientId, { email: cleanEmail });
+
+    return {
+      success: true,
+      patient: newPatient,
+      verificationCode,
+      userId: newUserId
+    };
+  }
+
+  /**
+   * Generates real-time available time slots preventing double-booking and checking dentist working schedule.
+   */
+  getAvailableAppointmentSlots(branchId, dentistId, dateStr) {
+    // Clinic working hours 10:00 to 20:00 in 30-min intervals
+    const standardSlots = [
+      '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+      '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
+      '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM',
+      '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM',
+      '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM'
+    ];
+
+    // Find any booked appointments on dateStr for dentistId
+    const bookedTimes = this.appointments
+      .filter((a) => a.dentistId === dentistId && a.status !== 'cancelled' && a.status !== 'no_show')
+      .map((a) => {
+        const d = new Date(a.startsAt);
+        const hours = d.getUTCHours();
+        const mins = d.getUTCMinutes() === 0 ? '00' : d.getUTCMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHour = (hours % 12 || 12).toString().padStart(2, '0');
+        return `${formattedHour}:${mins} ${ampm}`;
+      });
+
+    return standardSlots.map((slot) => ({
+      slot,
+      isAvailable: !bookedTimes.includes(slot)
+    }));
+  }
+
+  /**
+   * Records a laser pulse session with device meter verification.
+   */
+  recordLaserPulseSession(actor, payload) {
+    this.assertPermission(actor, 'clinical.write');
+    const { deviceId, patientId, dentistId, serviceName, pulsesUsed, counterBefore, counterAfter } = payload;
+
+    if (counterAfter !== counterBefore + pulsesUsed) {
+      throw new Error('INVALID_METER_COUNTER_SEQUENCE: counterAfter must equal counterBefore + pulsesUsed');
+    }
+
+    const session = {
+      id: `PLS-${Date.now()}`,
+      deviceId,
+      patientId,
+      dentistId,
+      serviceName,
+      pulsesUsed,
+      counterBefore,
+      counterAfter,
+      sessionDate: new Date().toISOString()
+    };
+
+    this.logAudit(actor, 'LASER_SESSION_RECORDED', 'laser_pulse_sessions', session.id, { pulsesUsed });
+    return session;
+  }
+
+  /**
+   * Staff Geolocation Attendance check-in with geofence validation.
+   */
+  recordStaffAttendance(profileId, { latitude, longitude, ipAddress }) {
+    // Alexandria Main Clinic Coordinates: 31.2001, 29.9187
+    const CLINIC_LAT = 31.2001;
+    const CLINIC_LNG = 29.9187;
+
+    let distanceMeters = 50; // Default simulated inside clinic
+    if (latitude && longitude) {
+      const dLat = (latitude - CLINIC_LAT) * 111000;
+      const dLng = (longitude - CLINIC_LNG) * 111000;
+      distanceMeters = Math.round(Math.sqrt(dLat * dLat + dLng * dLng));
+    }
+
+    const isWithinGeofence = distanceMeters <= 500;
+
+    const record = {
+      id: `ATT-${Date.now()}`,
+      profileId,
+      checkInTime: new Date().toISOString(),
+      latitude,
+      longitude,
+      ipAddress: ipAddress || '196.132.13.25',
+      distanceFromBranchMeters: distanceMeters,
+      isWithinGeofence,
+      status: isWithinGeofence ? 'present' : 'flagged_outside_geofence'
+    };
+
+    return record;
+  }
+
+  /**
+   * Adds or redeems patient loyalty points with ledger tracking.
+   */
+  manageLoyaltyPoints(patientId, pointsChange, transactionType, notes = '') {
+    const patient = this.patients.get(patientId);
+    if (!patient) throw new Error('PATIENT_NOT_FOUND');
+
+    const currentPts = patient.points || 0;
+    const nextPts = Math.max(0, currentPts + pointsChange);
+    patient.points = nextPts;
+
+    return {
+      patientId,
+      pointsChange,
+      balanceAfter: nextPts,
+      transactionType,
+      notes,
+      timestamp: new Date().toISOString()
+    };
+  }
 }

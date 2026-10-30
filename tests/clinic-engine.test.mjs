@@ -229,3 +229,129 @@ test('6. Financial Separation (Proposed Plan != Revenue), Invoice Math, Payments
   assert.equal(summary.netDentistCommissions, 2700);
   assert.ok(engine.auditLogs.length >= 4);
 });
+
+test('7. Patient Registration & Duplicate Phone/Email Prevention', () => {
+  const engine = new ClinicEngine();
+
+  // Successful new registration
+  const res = engine.registerPatient({
+    fullName: 'محمود عبد السلام',
+    phone: '+201099887766',
+    email: 'mahmoud@example.com',
+    password: 'PatientSecurePass#2026',
+    gender: 'male',
+    dateOfBirth: '1992-05-14',
+    emergencyContactName: 'عمر عبد السلام',
+    emergencyContactPhone: '+201011223344',
+    preferredBranch: 'ALEX-MAIN'
+  });
+  assert.equal(res.success, true);
+  assert.ok(res.patient.id.startsWith('DS-'));
+  assert.ok(res.verificationCode.startsWith('VERIFY-'));
+
+  // Duplicate registration with same phone MUST fail
+  assert.throws(() => {
+    engine.registerPatient({
+      fullName: 'محمود مكرر',
+      phone: '+201099887766',
+      email: 'other_email@example.com',
+      password: 'Pass#12345678'
+    });
+  }, /DUPLICATE_PATIENT_PHONE_OR_EMAIL/);
+
+  // Duplicate registration with same email MUST fail
+  assert.throws(() => {
+    engine.registerPatient({
+      fullName: 'محمود مكرر 2',
+      phone: '+201299999999',
+      email: 'mahmoud@example.com',
+      password: 'Pass#12345678'
+    });
+  }, /DUPLICATE_PATIENT_PHONE_OR_EMAIL/);
+});
+
+test('8. Real-Time Appointment Slot Generation & Dentist Availability', () => {
+  const engine = new ClinicEngine();
+  const reception = { id: 'usr-rec-1', role: 'receptionist', mustChangePassword: false };
+
+  // Book dentist dent-1 at 12:00 PM
+  engine.bookAppointment(reception, {
+    patientId: 'DS-1001',
+    dentistId: 'dent-1',
+    roomCode: 'ROOM-1',
+    startsAt: '2026-10-30T12:00:00.000Z',
+    endsAt: '2026-10-30T12:30:00.000Z',
+    procedureName: 'Consultation'
+  });
+
+  const slots = engine.getAvailableAppointmentSlots('ALEX-MAIN', 'dent-1', '2026-10-30');
+  const slot1200 = slots.find((s) => s.slot === '12:00 PM');
+  const slot1230 = slots.find((s) => s.slot === '12:30 PM');
+
+  assert.equal(slot1200.isAvailable, false);
+  assert.equal(slot1230.isAvailable, true);
+});
+
+test('9. Laser Pulse Session Meter Audit Verification', () => {
+  const engine = new ClinicEngine();
+  const dentist = { id: 'usr-dentist-1', role: 'dentist', mustChangePassword: false };
+
+  // Valid session: counterAfter === counterBefore + pulsesUsed
+  const session = engine.recordLaserPulseSession(dentist, {
+    deviceId: 'DEV-LASER-1',
+    patientId: 'DS-1001',
+    dentistId: 'dent-1',
+    serviceName: 'Laser Teeth Whitening',
+    pulsesUsed: 450,
+    counterBefore: 14200,
+    counterAfter: 14650
+  });
+  assert.equal(session.pulsesUsed, 450);
+
+  // Invalid meter audit sequence MUST throw error
+  assert.throws(() => {
+    engine.recordLaserPulseSession(dentist, {
+      deviceId: 'DEV-LASER-1',
+      patientId: 'DS-1001',
+      dentistId: 'dent-1',
+      serviceName: 'Laser Teeth Whitening',
+      pulsesUsed: 450,
+      counterBefore: 14200,
+      counterAfter: 14999 // Mismatch!
+    });
+  }, /INVALID_METER_COUNTER_SEQUENCE/);
+});
+
+test('10. Staff Geolocation Attendance & Alexandria Geofence Validation', () => {
+  const engine = new ClinicEngine();
+
+  // Within 500m of Alexandria Clinic
+  const inside = engine.recordStaffAttendance('usr-dentist-1', {
+    latitude: 31.2005,
+    longitude: 29.9189,
+    ipAddress: '196.132.13.25'
+  });
+  assert.equal(inside.isWithinGeofence, true);
+  assert.equal(inside.status, 'present');
+
+  // Far away (Cairo Coordinates: 30.0444, 31.2357)
+  const outside = engine.recordStaffAttendance('usr-dentist-1', {
+    latitude: 30.0444,
+    longitude: 31.2357,
+    ipAddress: '41.45.35.39'
+  });
+  assert.equal(outside.isWithinGeofence, false);
+  assert.equal(outside.status, 'flagged_outside_geofence');
+});
+
+test('11. Patient Loyalty & VIP Reward Points Ledger', () => {
+  const engine = new ClinicEngine();
+
+  // Patient DS-1001 earns 500 points
+  const earnRes = engine.manageLoyaltyPoints('DS-1001', 500, 'earned_visit', 'Routine Checkup');
+  assert.equal(earnRes.balanceAfter, 500);
+
+  // Patient DS-1001 redeems 200 points for discount
+  const redeemRes = engine.manageLoyaltyPoints('DS-1001', -200, 'redeemed_discount', 'Whitening Discount');
+  assert.equal(redeemRes.balanceAfter, 300);
+});
