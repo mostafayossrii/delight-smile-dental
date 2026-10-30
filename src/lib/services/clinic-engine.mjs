@@ -338,6 +338,28 @@ export class ClinicEngine {
       throw new Error('INVALID_APPOINTMENT_TIME_RANGE');
     }
 
+    const startDate = new Date(payload.startsAt);
+    const dayOfWeek = startDate.getUTCDay(); // 0: Sun, 1: Mon, 2: Tue, 3: Wed, 4: Thu, 5: Fri, 6: Sat
+    const startHour = startDate.getUTCHours();
+
+    // Friday check (day 5)
+    if (dayOfWeek === 5) {
+      throw new Error('CLINIC_CLOSED_ON_FRIDAY: Friday is official weekly clinic day off');
+    }
+
+    // Schedule check:
+    // Sat (6), Mon (1), Wed (3): 12:00 - 18:00 UTC/local
+    // Sun (0), Tue (2), Thu (4): 16:00 - 22:00 UTC/local
+    const isGroupA = [1, 3, 6].includes(dayOfWeek);
+    const isGroupB = [0, 2, 4].includes(dayOfWeek);
+
+    if (isGroupA && (startHour < 10 || startHour >= 18)) {
+      throw new Error('OUTSIDE_CLINIC_HOURS: Sat/Mon/Wed working hours are 12:00 PM to 06:00 PM');
+    }
+    if (isGroupB && (startHour < 14 || startHour >= 22)) {
+      throw new Error('OUTSIDE_CLINIC_HOURS: Sun/Tue/Thu working hours are 04:00 PM to 10:00 PM');
+    }
+
     // Check overlapping active appointments for the same dentist or same room
     const conflict = this.appointments.find((apt) => {
       if (apt.status === 'cancelled' || apt.status === 'no_show') return false;
@@ -673,14 +695,30 @@ export class ClinicEngine {
    * Generates real-time available time slots preventing double-booking and checking dentist working schedule.
    */
   getAvailableAppointmentSlots(branchId, dentistId, dateStr) {
-    // Clinic working hours 10:00 to 20:00 in 30-min intervals
-    const standardSlots = [
-      '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
-      '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
-      '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM',
-      '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM',
-      '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM'
-    ];
+    const targetDate = new Date(`${dateStr}T12:00:00.000Z`);
+    const dayOfWeek = targetDate.getUTCDay();
+
+    // Friday is completely closed
+    if (dayOfWeek === 5) {
+      return [];
+    }
+
+    let standardSlots = [];
+    if ([1, 3, 6].includes(dayOfWeek)) {
+      // Sat, Mon, Wed: 12:00 PM - 06:00 PM
+      standardSlots = [
+        '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
+        '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM',
+        '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM'
+      ];
+    } else if ([0, 2, 4].includes(dayOfWeek)) {
+      // Sun, Tue, Thu: 04:00 PM - 10:00 PM
+      standardSlots = [
+        '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM',
+        '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM',
+        '08:00 PM', '08:30 PM', '09:00 PM', '09:30 PM'
+      ];
+    }
 
     // Find any booked appointments on dateStr for dentistId
     const bookedTimes = this.appointments

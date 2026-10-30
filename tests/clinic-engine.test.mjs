@@ -98,8 +98,8 @@ test('4. Appointment Conflict Detection (Same Dentist or Same Room Overlap Block
     patientId: 'DS-1001',
     dentistId: 'dent-1',
     roomCode: 'ROOM-1',
-    startsAt: '2026-10-30T12:00:00.000Z',
-    endsAt: '2026-10-30T13:00:00.000Z',
+    startsAt: '2026-10-31T12:00:00.000Z',
+    endsAt: '2026-10-31T13:00:00.000Z',
     procedureName: 'E-Max Veneer Fitting'
   });
   assert.equal(apt1.status, 'confirmed');
@@ -110,8 +110,8 @@ test('4. Appointment Conflict Detection (Same Dentist or Same Room Overlap Block
       patientId: 'DS-1002',
       dentistId: 'dent-1',
       roomCode: 'ROOM-2',
-      startsAt: '2026-10-30T12:30:00.000Z',
-      endsAt: '2026-10-30T13:30:00.000Z',
+      startsAt: '2026-10-31T12:30:00.000Z',
+      endsAt: '2026-10-31T13:30:00.000Z',
       procedureName: 'Laser Whitening'
     });
   }, /APPOINTMENT_TIME_CONFLICT/);
@@ -122,11 +122,35 @@ test('4. Appointment Conflict Detection (Same Dentist or Same Room Overlap Block
       patientId: 'DS-1002',
       dentistId: 'dent-2',
       roomCode: 'ROOM-1',
-      startsAt: '2026-10-30T12:15:00.000Z',
-      endsAt: '2026-10-30T12:45:00.000Z',
+      startsAt: '2026-10-31T12:15:00.000Z',
+      endsAt: '2026-10-31T12:45:00.000Z',
       procedureName: 'Root Canal'
     });
   }, /APPOINTMENT_TIME_CONFLICT/);
+
+  // Friday appointment booking -> MUST be blocked
+  assert.throws(() => {
+    engine.bookAppointment(reception, {
+      patientId: 'DS-1004',
+      dentistId: 'dent-1',
+      roomCode: 'ROOM-1',
+      startsAt: '2026-10-30T14:00:00.000Z', // Friday
+      endsAt: '2026-10-30T14:30:00.000Z',
+      procedureName: 'Examination'
+    });
+  }, /CLINIC_CLOSED_ON_FRIDAY/);
+
+  // Outside working hours (e.g. 09:00 AM on Saturday) -> MUST be blocked
+  assert.throws(() => {
+    engine.bookAppointment(reception, {
+      patientId: 'DS-1005',
+      dentistId: 'dent-1',
+      roomCode: 'ROOM-1',
+      startsAt: '2026-10-31T09:00:00.000Z', // 9:00 AM (opens at 12:00 PM)
+      endsAt: '2026-10-31T09:30:00.000Z',
+      procedureName: 'Examination'
+    });
+  }, /OUTSIDE_CLINIC_HOURS/);
 });
 
 test('5. FDI Odontogram Validation (Adult 11-48 & Primary 51-85)', () => {
@@ -274,22 +298,26 @@ test('8. Real-Time Appointment Slot Generation & Dentist Availability', () => {
   const engine = new ClinicEngine();
   const reception = { id: 'usr-rec-1', role: 'receptionist', mustChangePassword: false };
 
-  // Book dentist dent-1 at 12:00 PM
+  // Book dentist dent-1 at 12:00 PM on Saturday
   engine.bookAppointment(reception, {
     patientId: 'DS-1001',
     dentistId: 'dent-1',
     roomCode: 'ROOM-1',
-    startsAt: '2026-10-30T12:00:00.000Z',
-    endsAt: '2026-10-30T12:30:00.000Z',
+    startsAt: '2026-10-31T12:00:00.000Z',
+    endsAt: '2026-10-31T12:30:00.000Z',
     procedureName: 'Consultation'
   });
 
-  const slots = engine.getAvailableAppointmentSlots('ALEX-MAIN', 'dent-1', '2026-10-30');
+  const slots = engine.getAvailableAppointmentSlots('ALEX-MAIN', 'dent-1', '2026-10-31');
   const slot1200 = slots.find((s) => s.slot === '12:00 PM');
   const slot1230 = slots.find((s) => s.slot === '12:30 PM');
 
   assert.equal(slot1200.isAvailable, false);
   assert.equal(slot1230.isAvailable, true);
+
+  // Friday must return 0 slots
+  const fridaySlots = engine.getAvailableAppointmentSlots('ALEX-MAIN', 'dent-1', '2026-10-30');
+  assert.equal(fridaySlots.length, 0);
 });
 
 test('9. Laser Pulse Session Meter Audit Verification', () => {
