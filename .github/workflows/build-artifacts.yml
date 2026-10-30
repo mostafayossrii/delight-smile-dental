@@ -47,17 +47,7 @@ jobs:
             sed -i 's/FlutterActivity/FlutterFragmentActivity/g' android/app/src/main/kotlin/com/delightsmile/delight_smile_clinic/MainActivity.kt
             sed -i 's/import io.flutter.embedding.android.FlutterActivity/import io.flutter.embedding.android.FlutterFragmentActivity/g' android/app/src/main/kotlin/com/delightsmile/delight_smile_clinic/MainActivity.kt
           fi
-          cat << 'EOF' >> android/build.gradle
-          subprojects {
-              afterEvaluate { project ->
-                  if (project.hasProperty("android")) {
-                      project.android {
-                          compileSdkVersion 34
-                      }
-                  }
-              }
-          }
-          EOF
+          node -e "const fs = require('fs'); fs.appendFileSync('android/build.gradle', '\nsubprojects { afterEvaluate { project -> if (project.hasProperty(\"android\")) { project.android { compileSdkVersion 34 } } } }\n');"
       - name: Get Flutter Packages
         working-directory: ./flutter_app
         run: flutter pub get
