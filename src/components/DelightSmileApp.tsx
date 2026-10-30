@@ -1026,17 +1026,43 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-slate-300 mb-1">الوقت المختار:</label>
-                      <select name="time" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white font-mono">
-                        <option value="05:30 PM">05:30 PM</option>
-                        <option value="06:00 PM">06:00 PM</option>
-                        <option value="06:30 PM">06:30 PM</option>
-                        <option value="07:00 PM">07:00 PM</option>
+                      <label className="block text-slate-300 mb-1">الوقت المتاح (مواعيد العيادة):</label>
+                      <select name="time" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white font-mono text-xs">
+                        <optgroup label="سبت - إثنين - أربعاء (12:00 م - 06:00 م)">
+                          <option value="12:00 PM">12:00 PM</option>
+                          <option value="01:00 PM">01:00 PM</option>
+                          <option value="02:00 PM">02:00 PM</option>
+                          <option value="03:00 PM">03:00 PM</option>
+                          <option value="04:00 PM">04:00 PM</option>
+                          <option value="05:00 PM">05:00 PM</option>
+                        </optgroup>
+                        <optgroup label="أحد - ثلاثاء - خميس (04:00 م - 10:00 م)">
+                          <option value="04:00 PM">04:00 PM</option>
+                          <option value="05:00 PM">05:00 PM</option>
+                          <option value="06:00 PM">06:00 PM</option>
+                          <option value="07:00 PM">07:00 PM</option>
+                          <option value="08:00 PM">08:00 PM</option>
+                          <option value="09:00 PM">09:00 PM</option>
+                        </optgroup>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-slate-300 mb-1">الإجراء الطبي:</label>
-                      <input name="proc" defaultValue="فينير تجميلي E-Max" required className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white" />
+                      <label className="block text-slate-300 mb-1">الإجراء الطبي المطلوب:</label>
+                      <select name="proc" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white text-xs">
+                        <option value="Composite Restoration">Composite Restoration (حشو كمبوزيت)</option>
+                        <option value="Composite veneer">Composite veneer (فينير كمبوزيت)</option>
+                        <option value="Endodontic treatment">Endodontic treatment (علاج جذور)</option>
+                        <option value="Pulpotomy">Pulpotomy (بتر لب السن)</option>
+                        <option value="Pulpectomy">Pulpectomy (استئصال لب السن)</option>
+                        <option value="Extraction">Extraction (خلع أسنان)</option>
+                        <option value="Crown restoration">Crown restoration (طربوش / تركيبة)</option>
+                        <option value="Veneers">Veneers (عدسات الفينير الخزفي)</option>
+                        <option value="Complete denture">Complete denture (طقم كامل)</option>
+                        <option value="Single denture">Single denture (طقم أحادي)</option>
+                        <option value="Partial denture">Partial denture (طقم جزئي)</option>
+                        <option value="Scaling">Scaling (تنظيف جير وتلميع)</option>
+                        <option value="Whitening">Whitening (تبييض بالليزر)</option>
+                      </select>
                     </div>
                   </div>
                   <button type="submit" className="w-full py-2.5 rounded-xl gold-gradient text-obsidian-950 font-extrabold shadow mt-2">
@@ -2085,6 +2111,55 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
               </div>
             </div>
           )}
+
+          {/* Official Delight Smile Clinic Footer */}
+          <footer className="mt-12 pt-6 border-t border-gold-500/20 bg-gradient-to-r from-obsidian-950 via-obsidian-900 to-obsidian-950 rounded-2xl p-6 gold-border-glow">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4 text-right">
+                <div className="w-16 h-16 rounded-xl bg-black border border-gold-500/40 p-1 flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <img src="/logo.jpg" alt="Delight Smile Logo" className="max-w-full h-auto object-contain" />
+                </div>
+                <div>
+                  <h4 className="text-base font-extrabold gold-text-gradient">عيادة Delight Smile • د. عمر سالم</h4>
+                  <p className="text-xs text-gold-300 font-medium">جميع التخصصات وجراحة وتجميل وزراعة الأسنان</p>
+                  <p className="text-xs text-slate-400 mt-1">
+                    <i className="fa-solid fa-location-dot ml-1 text-gold-400"></i>
+                    الأسكندرية - جليم - ٤ شارع أحمد فتحي، برج جليم هايتس، الدور الأول
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4 text-xs">
+                <div className="bg-obsidian-800/80 p-3 rounded-xl border border-gold-500/20 text-slate-300 space-y-1">
+                  <div className="font-bold text-gold-300">مواعيد العمل:</div>
+                  <div>السبت - الإثنين - الأربعاء: 12:00 م - 06:00 م</div>
+                  <div>الأحد - الثلاثاء - الخميس: 04:00 م - 10:00 م</div>
+                  <div className="text-slate-400 text-[11px]">الجمعة: إجازة أسبوعية</div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <a
+                    href="https://wa.me/201034366020"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-2 shadow transition"
+                  >
+                    <i className="fa-brands fa-whatsapp text-lg"></i>
+                    <span>واتساب العيادة: 01034366020</span>
+                  </a>
+                  <a
+                    href="tel:01091313305"
+                    className="px-4 py-2 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-gold-300 border border-gold-500/30 font-bold flex items-center gap-2 transition"
+                  >
+                    <i className="fa-solid fa-phone text-xs"></i>
+                    <span>هاتف العيادة: 01091313305</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 pt-3 border-t border-gold-500/10 text-center text-xs text-gold-400/80 italic font-serif">
+              "Your Delight is on your Smile"
+            </div>
+          </footer>
         </main>
       </div>
 

@@ -27,6 +27,41 @@ export const FDI_PRIMARY_TEETH = [
 
 export const VALID_SURFACES = ['WHOLE', 'M', 'D', 'O', 'I', 'B', 'F', 'L', 'P'];
 
+export const OFFICIAL_CLINIC_INFO = {
+  nameAr: 'عيادة Delight Smile - د. عمر سالم',
+  nameEn: 'Delight Smile Dental Clinic - Dr. Omar Salem',
+  doctorNameAr: 'د. عمر سالم',
+  doctorNameEn: 'Dr. Omar Salem',
+  specialtiesAr: 'جميع التخصصات وجراحة وتجميل وزراعة الأسنان',
+  businessPhone: '+201034366020',
+  clinicPhone: '+201091313305',
+  whatsappNumber: '201034366020',
+  whatsappUrl: 'https://wa.me/201034366020',
+  addressAr: 'الأسكندرية - جليم - ٤ شارع أحمد فتحي، برج جليم هايتس، الدور الأول',
+  addressEn: 'Glim Heights Tower, 1st Floor, 4 Ahmed Fathi St., Glim, Alexandria, Egypt',
+  slogan: 'Your Delight is on your Smile',
+  schedule: {
+    groupA: { days: ['Saturday', 'Monday', 'Wednesday'], daysAr: 'السبت - الإثنين - الأربعاء', hours: '12:00 PM - 06:00 PM' },
+    groupB: { days: ['Sunday', 'Tuesday', 'Thursday'], daysAr: 'الأحد - الثلاثاء - الخميس', hours: '04:00 PM - 10:00 PM' },
+    off: { days: ['Friday'], daysAr: 'الجمعة', hours: 'Closed / إجازة' }
+  },
+  procedures: [
+    { code: 'COMP-REST', nameEn: 'Composite Restoration', nameAr: 'حشو كومبوزيت تجميلي' },
+    { code: 'COMP-VEN', nameEn: 'Composite veneer', nameAr: 'فينير كومبوزيت تجميلي' },
+    { code: 'ENDO-TRT', nameEn: 'Endodontic treatment', nameAr: 'علاج جذور وعصب الأسنان' },
+    { code: 'PULPOTOMY', nameEn: 'Pulpotomy', nameAr: 'بتر لب السن (علاج أسنان الأطفال)' },
+    { code: 'PULPECTOMY', nameEn: 'Pulpectomy', nameAr: 'استئصال لب السن الجذري' },
+    { code: 'EXTRACT', nameEn: 'Extraction', nameAr: 'خلع الأسنان وجراحة الفم' },
+    { code: 'CROWN-REST', nameEn: 'Crown restoration', nameAr: 'تركيبات التيجان والجسور الثابتة' },
+    { code: 'PORC-VEN', nameEn: 'Veneers', nameAr: 'عدسات الفينير الخزفي E-Max' },
+    { code: 'DENT-COMPL', nameEn: 'Complete denture', nameAr: 'طقم أسنان صناعي كامل' },
+    { code: 'DENT-SNGL', nameEn: 'Single denture', nameAr: 'طقم أسنان أحادي' },
+    { code: 'DENT-PART', nameEn: 'Partial denture', nameAr: 'طقم أسنان صناعي جزئي' },
+    { code: 'SCALING', nameEn: 'Scaling', nameAr: 'تنظيف الجير وتلميع الأسنان وعلاج اللثة' },
+    { code: 'WHITENING', nameEn: 'Whitening', nameAr: 'تبييض الأسنان الاحترافي بالليزر' }
+  ]
+};
+
 export class ClinicEngine {
   constructor() {
     this.auditLogs = [];

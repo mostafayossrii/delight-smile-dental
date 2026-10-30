@@ -147,7 +147,20 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ],
 
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 20),
+
+                  // Official Clinic Address & Phones
+                  const Text(
+                    'الأسكندرية - جليم - ٤ شارع أحمد فتحي، برج جليم هايتس، الدور الأول\nهاتف: 01091313305 • واتساب: 01034366020',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 11, color: AppConstants.gold300, height: 1.5),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    '"Your Delight is on your Smile"',
+                    style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: AppConstants.gold400),
+                  ),
+                  const SizedBox(height: 16),
 
                   // Terms & Privacy Policy
                   const Text(

@@ -128,18 +128,25 @@ jobs:
         with:
           name: delight-smile-windows-app
           path: artifacts
-      - name: Create GitHub Release v1.0.0
+      - name: Create GitHub Release v1.0.1
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.0
-          name: "Delight Smile Dental Clinic Production Release v1.0.0"
+          tag_name: v1.0.1
+          name: "Delight Smile Dental Clinic Official Branding Release v1.0.1"
           body: |
             ## Delight Smile Dental Clinic Management System
             Official cross-platform production release for **Dr. Omar Salem (Alexandria, Egypt)**.
             
+            ### Clinic Official Information:
+            - **Doctor**: د. عمر سالم (All Dental Specialties / جميع التخصصات)
+            - **Location**: الأسكندرية - جليم - ٤ شارع أحمد فتحي برج جليم هايتس الدور الأول
+            - **Clinic Phone**: `+20 109 131 3305`
+            - **Business / WhatsApp**: `+20 103 436 6020`
+            - **Slogan**: *"Your Delight is on your Smile"*
+            
             ### Included Artifacts:
-            - **Android APK**: `app-release.apk` (Installable on any Android smartphone or tablet)
-            - **Android App Bundle (AAB)**: `app-release.aab` (Google Play Console upload ready)
+            - **Android APK**: `app-release.apk` (Installable testing release for Android)
+            - **Android App Bundle (AAB)**: `app-release.aab` (Google Play Console ready)
             - **Windows Desktop App**: `delight-smile-windows.zip` (Native 64-bit desktop application)
           files: |
             artifacts/app-release.apk

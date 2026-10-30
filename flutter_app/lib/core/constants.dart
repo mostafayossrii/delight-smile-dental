@@ -26,10 +26,45 @@ class AppConstants {
   static const Color warningAmber = Color(0xFFF59E0B);
   static const Color infoBlue = Color(0xFF3B82F6);
 
-  // Alexandria Clinic Coordinates
-  static const double clinicLatitude = 31.2001;
-  static const double clinicLongitude = 29.9187;
+  // Alexandria Clinic Coordinates & Official Address
+  static const double clinicLatitude = 31.2333; // Glim, Alexandria
+  static const double clinicLongitude = 29.9650;
   static const double geofenceRadiusMeters = 500.0;
+
+  // Official Clinic & Doctor Details
+  static const String doctorNameAr = 'د. عمر سالم';
+  static const String doctorNameEn = 'Dr. Omar Salem';
+  static const String doctorTitleAr = 'جميع التخصصات وجراحة وتجميل وزراعة الأسنان';
+  static const String doctorTitleEn = 'All Dental Specialties, Surgery & Cosmetic Dentistry';
+  static const String businessPhone = '+201034366020';
+  static const String clinicPhone = '+201091313305';
+  static const String whatsappNumber = '201034366020';
+  static const String whatsappLink = 'https://wa.me/201034366020';
+  static const String clinicAddressAr = 'الأسكندرية - جليم - ٤ شارع أحمد فتحي، برج جليم هايتس، الدور الأول';
+  static const String clinicAddressEn = 'Glim Heights Tower, 1st Floor, 4 Ahmed Fathi St., Glim, Alexandria, Egypt';
+  static const String clinicSlogan = 'Your Delight is on your Smile';
+
+  // Working Hours
+  static const String scheduleDaysA = 'السبت - الإثنين - الأربعاء: 12:00 ظهراً - 06:00 مساءً';
+  static const String scheduleDaysB = 'الأحد - الثلاثاء - الخميس: 04:00 عصراً - 10:00 مساءً';
+  static const String scheduleOffDay = 'الجمعة: إجازة أسبوعية';
+
+  // Clinical Procedures
+  static const List<Map<String, String>> officialProcedures = [
+    {'nameEn': 'Composite Restoration', 'nameAr': 'حشو كومبوزيت تجميلي'},
+    {'nameEn': 'Composite veneer', 'nameAr': 'فينير كومبوزيت تجميلي'},
+    {'nameEn': 'Endodontic treatment', 'nameAr': 'علاج جذور وعصب الأسنان'},
+    {'nameEn': 'Pulpotomy', 'nameAr': 'بتر لب السن (علاج أسنان الأطفال)'},
+    {'nameEn': 'Pulpectomy', 'nameAr': 'استئصال لب السن الجذري'},
+    {'nameEn': 'Extraction', 'nameAr': 'خلع الأسنان وجراحة الفم'},
+    {'nameEn': 'Crown restoration', 'nameAr': 'تركيبات التيجان والجسور الثابتة'},
+    {'nameEn': 'Veneers', 'nameAr': 'عدسات الفينير الخزفي E-Max'},
+    {'nameEn': 'Complete denture', 'nameAr': 'طقم أسنان صناعي كامل'},
+    {'nameEn': 'Single denture', 'nameAr': 'طقم أسنان أحادي'},
+    {'nameEn': 'Partial denture', 'nameAr': 'طقم أسنان صناعي جزئي'},
+    {'nameEn': 'Scaling', 'nameAr': 'تنظيف الجير وتلميع الأسنان وعلاج اللثة'},
+    {'nameEn': 'Whitening', 'nameAr': 'تبييض الأسنان الاحترافي بالليزر'},
+  ];
 
   // Supabase defaults
   static const String defaultSupabaseUrl = 'https://delight-smile-dental.supabase.co';

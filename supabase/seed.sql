@@ -5,23 +5,40 @@
 INSERT INTO branches (id, code, name_ar, name_en, address, phone, timezone)
 VALUES (
   '11111111-1111-1111-1111-111111111111',
-  'ALEX-MAIN',
-  'فرع الإسكندرية الرئيسي - سموحة',
-  'Alexandria Main Branch - Smouha',
-  'Smouha, Alexandria, Egypt',
-  '+20 101 447 1777',
+  'ALEX-GLIM',
+  'فرع الإسكندرية الرئيسي - جليم',
+  'Alexandria Main Branch - Glim',
+  'الأسكندرية - جليم - ٤ شارع أحمد فتحي برج جليم هايتس الدور الأول',
+  '+20 109 131 3305',
   'Africa/Cairo'
 ) ON CONFLICT (code) DO NOTHING;
 
 INSERT INTO clinic_settings (branch_id, clinic_name_ar, clinic_name_en, default_currency, default_locale, tax_rate_percent)
 VALUES (
   '11111111-1111-1111-1111-111111111111',
-  'عيادة Delight Smile - د. عمر سالم',
+  'عيادة Delight Smile - د. عمر سالم (جميع التخصصات)',
   'Delight Smile Dental Clinic - Dr. Omar Salem',
   'EGP',
   'ar',
   0.00
 );
+
+-- Official Clinical Procedures Catalog (Dr. Omar Salem)
+INSERT INTO procedures (code, name_ar, name_en, category, estimated_duration_minutes) VALUES
+  ('COMP-REST', 'حشو كومبوزيت تجميلي', 'Composite Restoration', 'Restorative', 45),
+  ('COMP-VEN', 'فينير كومبوزيت تجميلي', 'Composite veneer', 'Cosmetic', 60),
+  ('ENDO-TRT', 'علاج جذور وعصب الأسنان', 'Endodontic treatment', 'Endodontics', 60),
+  ('PULPOTOMY', 'بتر لب السن (علاج أسنان الأطفال)', 'Pulpotomy', 'Pediatric', 30),
+  ('PULPECTOMY', 'استئصال لب السن الجذري', 'Pulpectomy', 'Pediatric/Endo', 45),
+  ('EXTRACT', 'خلع أسنان وجراحة الفم', 'Extraction', 'Surgery', 30),
+  ('CROWN-REST', 'تركيبات التيجان والجسور الثابتة', 'Crown restoration', 'Prosthodontics', 45),
+  ('PORC-VEN', 'عدسات الفينير الخزفي E-Max', 'Veneers', 'Cosmetic', 60),
+  ('DENT-COMPL', 'طقم أسنان صناعي كامل', 'Complete denture', 'Removable Prosthodontics', 60),
+  ('DENT-SNGL', 'طقم أسنان أحادي', 'Single denture', 'Removable Prosthodontics', 45),
+  ('DENT-PART', 'طقم أسنان صناعي جزئي', 'Partial denture', 'Removable Prosthodontics', 45),
+  ('SCALING', 'تنظيف الجير وتلميع الأسنان وعلاج اللثة', 'Scaling', 'Preventive', 30),
+  ('WHITENING', 'تبييض الأسنان الاحترافي بالليزر', 'Whitening', 'Cosmetic', 45)
+ON CONFLICT (code) DO NOTHING;
 
 -- Roles (6 Staff Roles + Patient Role)
 INSERT INTO roles (code, name_ar, name_en, is_system) VALUES
