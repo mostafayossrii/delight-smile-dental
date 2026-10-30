@@ -26,10 +26,26 @@ const PATIENT_ROUTES = [
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Never intercept public auth pages or static routes
+  if (
+    pathname === '/staff/login' ||
+    pathname === '/patient/login' ||
+    pathname === '/patient/register' ||
+    pathname === '/forgot-password' ||
+    pathname === '/privacy' ||
+    pathname === '/terms'
+  ) {
+    return NextResponse.next();
+  }
+
   const authCookie = request.cookies.get('delight_smile_token')?.value;
 
-  // 1. Check Staff Protected Routes
-  const isStaffRoute = STAFF_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
+  // 1. Check Staff Protected Routes (exclude /staff/login)
+  const isStaffRoute = STAFF_ROUTES.some(route => {
+    if (pathname === '/staff/login') return false;
+    return pathname === route || pathname.startsWith(route + '/');
+  });
   if (isStaffRoute) {
     if (!authCookie) {
       const loginUrl = new URL('/staff/login', request.url);
