@@ -44,7 +44,7 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'المسافة من فرع سموحة: ${_distanceMeters.toStringAsFixed(1)} متر (الحد المسموح 500 م)',
+                      'المسافة من عيادة جليم: ${_distanceMeters.toStringAsFixed(1)} متر (الحد المسموح 500 م)',
                       style: const TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                     const SizedBox(height: 6),
@@ -68,7 +68,7 @@ class _StaffAttendanceScreenState extends State<StaffAttendanceScreen> {
                               setState(() {
                                 _isCheckedIn = true;
                                 _distanceMeters = 35.0;
-                                _status = 'تم تسجيل الحضور بنجاح في فرع الإسكندرية';
+                                _status = 'تم تسجيل الحضور بنجاح في فرع جليم (برج جليم هايتس)';
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

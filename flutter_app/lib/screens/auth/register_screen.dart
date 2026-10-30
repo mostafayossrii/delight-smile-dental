@@ -21,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emergPhoneController = TextEditingController();
 
   String _gender = 'female';
-  String _preferredBranch = 'ALEX-MAIN';
+  String _preferredBranch = 'GLEEM-MAIN';
   DateTime _dob = DateTime(1996, 5, 20);
   bool _agreedToTerms = true;
   bool _isLoading = false;
@@ -120,12 +120,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           value: _preferredBranch,
-                          decoration: const InputDecoration(labelText: 'الفرع المفضل'),
+                          decoration: const InputDecoration(labelText: 'الفرع المعتمد'),
                           items: const [
-                            DropdownMenuItem(value: 'ALEX-MAIN', child: Text('فرع الإسكندرية الرئيسي')),
-                            DropdownMenuItem(value: 'CAIRO-TAGAMOA', child: Text('فرع التجمع الخامس')),
+                            DropdownMenuItem(value: 'GLEEM-MAIN', child: Text('فرع جليم (برج جليم هايتس)')),
                           ],
-                          onChanged: (val) => setState(() => _preferredBranch = val!),
+                          onChanged: null,
                         ),
                       ),
                     ],

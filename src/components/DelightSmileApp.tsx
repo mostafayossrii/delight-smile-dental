@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { AnatomicalTooth, getToothNameAr, getToothType } from './AnatomicalTooth';
+import { DelightSmileAuth, AuthUser } from './DelightSmileAuth';
 
 // --- Types ---
 export interface NavItem {
@@ -190,174 +191,33 @@ const INITIAL_NAV_ITEMS: NavItem[] = [
   { id: 'fullstack_arch', title: 'معمارية Next.js + Supabase + PWA', icon: 'fa-database', badge: '38 جدول', desc: 'كود SQL، سياسات RLS، نتائج الاختبارات الآلية، وتصدير التقارير CSV' }
 ];
 
-const INITIAL_PATIENTS: Patient[] = [
+const INITIAL_PATIENTS: Patient[] = [];
+const INITIAL_APPOINTMENTS: Appointment[] = [];
+const INITIAL_INVOICES: Invoice[] = [];
+const INITIAL_EXPENSES: Expense[] = [];
+const INITIAL_INSURANCE: InsuranceCompany[] = [];
+const INITIAL_LAB_ORDERS: LabOrder[] = [];
+const INITIAL_INVENTORY: InventoryItem[] = [];
+const INITIAL_PULSES: PulseSession[] = [];
+const INITIAL_STAFF: StaffMember[] = [
   {
-    id: 'P-1001',
-    name: 'نورهان محمد عبد الرحمن',
-    phone: '+20 103 655 4750',
-    age: 29,
-    gender: 'أنثى',
-    area: 'سموحة - الإسكندرية',
-    insurance: 'AXA للتأمين الطبي',
-    membershipNo: 'AXA-88412',
-    points: 3300,
-    usedPoints: 1200,
-    creditBalance: 450,
-    medicalHistory: ['حساسية بنسلين خفيفة', 'لا يوجد سكري أو ضغط'],
-    notes: 'المريضة تفضل المواعيد المسائية، وتحتاج متابعة بعد تركيب عدسات الفينير.',
-    teethStatus: {
-      11: { status: 'veneer', label: 'فينير تجميلي E-Max', doctor: 'د. عمر سالم', price: 6500 },
-      21: { status: 'veneer', label: 'فينير تجميلي E-Max', doctor: 'د. عمر سالم', price: 6500 },
-      16: { status: 'root_canal', label: 'علاج جذور + طربوش زيركون', doctor: 'د. عمر سالم', price: 4200 },
-      26: { status: 'filling', label: 'حشو تجميلي كومبوزيت', doctor: 'د. سارة عادل', price: 1200 },
-      36: { status: 'implant', label: 'زراعة سن تيتانيوم سويسري', doctor: 'د. عمر سالم', price: 14000 },
-      46: { status: 'caries', label: 'تسوس يحتاج حشو', doctor: 'د. عمر سالم', price: 1100 }
-    },
-    treatmentSteps: [
-      { id: 'TS-1', step: 'تصميم الابتسامة الرقمي (DSD) وأخذ المقاسات', doctor: 'د. عمر سالم', sharePct: 40, price: 3000, status: 'مكتمل' },
-      { id: 'TS-2', step: 'تركيب 2 عدسة فينير E-Max للأسنان الأمامية', doctor: 'د. عمر سالم', sharePct: 45, price: 13000, status: 'مكتمل' },
-      { id: 'TS-3', step: 'زراعة الضرس 36 (المرحلة الجراحية الأولى)', doctor: 'د. عمر سالم', sharePct: 50, price: 14000, status: 'قيد التنفيذ' }
-    ],
-    prescriptions: [
-      { id: 'RX-201', date: '2026-10-20', doctor: 'د. عمر سالم', meds: 'Augmentin 1g كل 12 ساعة لمدة 5 أيام • Brufen 600mg عند اللزوم • غسول فم كلورهيكسيدين 3 مرات يومياً' }
-    ],
-    consents: [
-      { id: 'CS-1', title: 'إقرار موافقة على زراعة الأسنان والفينير التجميلي', signed: true, date: '2026-10-18 06:30 PM', signature: 'نورهان محمد (توقيع إلكتروني موثق)' }
-    ]
-  },
-  {
-    id: 'P-1002',
-    name: 'أحمد إبراهيم المنيري',
-    phone: '+20 127 071 0200',
-    age: 38,
-    gender: 'ذكر',
-    area: 'كفر عبده - الإسكندرية',
-    insurance: 'مصر للتأمين (Egypt Insurance)',
-    membershipNo: 'EG-55190',
-    points: 5200,
-    usedPoints: 2000,
-    creditBalance: 0,
-    medicalHistory: ['مدخن', 'لا توجد أمراض مزمنة'],
-    notes: 'جلسة تبييض بالليزر + تنظيف جير بالموجات فوق الصوتية.',
-    teethStatus: {
-      12: { status: 'crown', label: 'طربوش زيركون', doctor: 'د. عمر سالم', price: 3800 },
-      24: { status: 'filling', label: 'حشو تجميلي', doctor: 'د. رامي طارق', price: 1000 }
-    },
-    treatmentSteps: [
-      { id: 'TS-4', step: 'تبييض الأسنان بالليزر (جلسة كاملة)', doctor: 'د. عمر سالم', sharePct: 40, price: 4500, status: 'مكتمل' }
-    ],
-    prescriptions: [
-      { id: 'RX-202', date: '2026-10-24', doctor: 'د. عمر سالم', meds: 'معجون أسنان للأسنان الحساسة Sensodyne مرتين يومياً لمدة أسبوعين' }
-    ],
-    consents: [
-      { id: 'CS-2', title: 'إقرار موافقة على تبييض الأسنان بالليزر', signed: true, date: '2026-10-24 04:15 PM', signature: 'أحمد إبراهيم المنيري' }
-    ]
-  },
-  {
-    id: 'P-1003',
-    name: 'سارة محمد الشافعي',
-    phone: '+20 111 492 8810',
-    age: 24,
-    gender: 'أنثى',
-    area: 'لوران - الإسكندرية',
-    insurance: 'بدون تأمين (نقدي VIP)',
-    membershipNo: '-',
-    points: 1850,
-    usedPoints: 500,
-    creditBalance: 1200,
-    medicalHistory: ['لا توجد موانع طبية'],
-    notes: 'تقويم أسنان شفاف متحرك (Clear Aligner).',
-    teethStatus: {
-      13: { status: 'veneer', label: 'تقويم شفاف', doctor: 'د. سارة عادل', price: 22000 }
-    },
-    treatmentSteps: [
-      { id: 'TS-5', step: 'قوالب التقويم الشفاف - المرحلة الأولى', doctor: 'د. سارة عادل', sharePct: 35, price: 22000, status: 'قيد التنفيذ' }
-    ],
-    prescriptions: [],
-    consents: []
+    id: 'usr-dentist-1',
+    name: 'د. عمر سالم',
+    role: 'استشاري جراحة وتجميل وزراعة الأسنان',
+    permissions: 'صلاحيات طبية وإدارية كاملة',
+    startTime: '12:00 PM',
+    endTime: '10:00 PM',
+    location: 'عيادة جليم - برج جليم هايتس',
+    salary: 0,
+    advance: 0,
+    tasksDone: 0,
+    status: 'على رأس العمل'
   }
 ];
-
-const INITIAL_APPOINTMENTS: Appointment[] = [
-  { id: 'APT-101', patientName: 'نورهان محمد عبد الرحمن', doctor: 'د. عمر سالم', room: 'عيادة 1 (VIP تجميل وزراعة)', time: '12:00 PM', date: '2026-10-26', type: 'تركيب فينير E-Max', status: 'مؤكد', source: 'QR-Code' },
-  { id: 'APT-102', patientName: 'أحمد إبراهيم المنيري', doctor: 'د. عمر سالم', room: 'عيادة 1 (VIP تجميل وزراعة)', time: '01:30 PM', date: '2026-10-26', type: 'تبييض بالليزر', status: 'داخل العيادة', source: 'واتساب بوت' },
-  { id: 'APT-103', patientName: 'سارة محمد الشافعي', doctor: 'د. سارة عادل', room: 'عيادة 2 (التقويم والحشو)', time: '01:30 PM', date: '2026-10-26', type: 'متابعة تقويم شفاف', status: 'مؤكد', source: 'الاستقبال' },
-  { id: 'APT-104', patientName: 'محمود عمران الكيلاني', doctor: 'د. رامي طارق', room: 'عيادة 3 (علاج الجذور)', time: '03:00 PM', date: '2026-10-26', type: 'حشو عصب ضرس 36', status: 'انتظار', source: 'تطبيق الهاتف' },
-  { id: 'APT-105', patientName: 'خلود خليل عبد العزيز', doctor: 'د. عمر سالم', room: 'عيادة 1 (VIP تجميل وزراعة)', time: '05:00 PM', date: '2026-10-26', type: 'استشارة هوليوود سمايل', status: 'مؤكد', source: 'QR-Code' }
-];
-
-const INITIAL_INVOICES: Invoice[] = [
-  { id: 'INV-1240', patient: 'نورهان محمد عبد الرحمن', phone: '+20 103 655 4750', procedure: 'فينير E-Max + زراعة', total: 19500, paid: 15500, insurance: 2000, discount: 500, remaining: 1500, doctor: 'د. عمر سالم', doctorSharePct: 45, taxStatus: 'موافقة لمصلحة الضرائب المصرية', date: '2026-10-25' },
-  { id: 'INV-1239', patient: 'أحمد إبراهيم المنيري', phone: '+20 127 071 0200', procedure: 'تبييض بالليزر + طربوش زيركون', total: 8300, paid: 8300, insurance: 0, discount: 0, remaining: 0, doctor: 'د. عمر سالم', doctorSharePct: 45, taxStatus: 'موافقة لمصلحة الضرائب المصرية', date: '2026-10-24' },
-  { id: 'INV-1238', patient: 'سارة محمد الشافعي', phone: '+20 111 492 8810', procedure: 'تقويم أسنان شفاف (دفعة أولى)', total: 22000, paid: 14000, insurance: 0, discount: 1000, remaining: 7000, doctor: 'د. سارة عادل', doctorSharePct: 35, taxStatus: 'موافقة لمصلحة الضرائب المصرية', date: '2026-10-23' },
-  { id: 'INV-1237', patient: 'حمزة الرفاعي', phone: '+966 50 619 6060', procedure: 'ابتسامة هوليوود كاملة (16 سن)', total: 88000, paid: 88000, insurance: 0, discount: 3000, remaining: 0, doctor: 'د. عمر سالم', doctorSharePct: 50, taxStatus: 'متوافقة مع هيئة الزكاة والدخل ZATCA', date: '2026-10-21' }
-];
-
-const INITIAL_EXPENSES: Expense[] = [
-  { id: 'EXP-1', title: 'خامات زراعة سويسرية وعدسات E-Max', category: 'مشتريات ومخازن', amount: 42000, date: '2026-10-22', treasury: 'الخزنة البنكية CIB' },
-  { id: 'EXP-2', title: 'دفعة معمل Max Dental Labs', category: 'معامل الأسنان', amount: 18500, date: '2026-10-23', treasury: 'خزنة الكاش الرئيسية' },
-  { id: 'EXP-3', title: 'مرتبات وحوافز فريق الاستقبال والتمريض', category: 'المرتبات والأجور', amount: 34000, date: '2026-10-25', treasury: 'الخزنة البنكية CIB' },
-  { id: 'EXP-4', title: 'حملات إعلانية ممولة وبوت الواتساب', category: 'التسويق والإعلانات', amount: 9500, date: '2026-10-20', treasury: 'محفظة فودافون كاش' }
-];
-
-const INITIAL_INSURANCE: InsuranceCompany[] = [
-  { id: 'INS-1', name: 'AXA للتأمين الطبي', phone: '+20 103 666 2215', discountPct: 20, limit: 50000, approvalRequired: true, claimed: 28500, unclaimed: 6400 },
-  { id: 'INS-2', name: 'مصر للتأمين (Egypt Insurance)', phone: '+20 110 037 3820', discountPct: 25, limit: 35000, approvalRequired: true, claimed: 19200, unclaimed: 3600 },
-  { id: 'INS-3', name: 'Chubb Insurance', phone: '+20 112 554 6252', discountPct: 40, limit: 100000, approvalRequired: false, claimed: 44000, unclaimed: 8200 },
-  { id: 'INS-4', name: 'نقابة المهندسين والأطباء', phone: '+20 127 848 2439', discountPct: 30, limit: 20000, approvalRequired: false, claimed: 12400, unclaimed: 1900 }
-];
-
-const INITIAL_LAB_ORDERS: LabOrder[] = [
-  { id: 'LAB-901', labName: 'Max Dental Labs', patient: 'نورهان محمد عبد الرحمن', doctor: 'د. عمر سالم', item: '2 عدسة فينير E-Max', tooth: '#11, #21', shade: 'BL2', price: 4400, dueDate: '2026-10-27 05:00 PM', receiverStaff: 'أ. رحمة شريف', status: 'تم الإرسال بالواتساب' },
-  { id: 'LAB-902', labName: 'Royal Zircon Lab', patient: 'أحمد إبراهيم المنيري', doctor: 'د. عمر سالم', item: 'طربوش زيركون متعدد الطبقات', tooth: '#12', shade: 'A1', price: 1800, dueDate: '2026-10-26 02:00 PM', receiverStaff: 'أ. عبد الرحمن مجدي', status: 'تم الاستلام بالعيادة' },
-  { id: 'LAB-903', labName: 'Max Dental Labs', patient: 'محمود عمران الكيلاني', doctor: 'د. رامي طارق', item: 'طربوش PFM داعم للضرس', tooth: '#36', shade: 'A2', price: 1300, dueDate: '2026-10-28 06:00 PM', receiverStaff: 'أ. رحمة شريف', status: 'قيد التصنيع بالمعمل' }
-];
-
-const INITIAL_INVENTORY: InventoryItem[] = [
-  { id: 'INV-M1', name: 'بنج أسنان Artinibsa 4% (صندوق 50 أمبول)', level: 'المخزن الرئيسي (بالصندوق)', qty: 18, unit: 'صندوق', minAlert: 5, expiry: '2027-08-15', supplier: 'شركة ديجيتال للمستلزمات الطبية' },
-  { id: 'INV-S1', name: 'كبسولات كومبوزيت 3M Filtek Z350', level: 'المخزن الفرعي (بالوحدة)', qty: 42, unit: 'كبسولة', minAlert: 15, expiry: '2027-03-10', supplier: 'شركة النور دنتال' },
-  { id: 'INV-C1', name: 'جل تبييض الليزر الاحترافي Philips Zoom', level: 'مخزن عيادة 1 (د. عمر سالم)', qty: 3, unit: 'عبوة', minAlert: 5, expiry: '2026-11-20', supplier: 'شركة ديجيتال للمستلزمات الطبية' },
-  { id: 'INV-C2', name: 'قفازات نيتريل سوداء فاخرة (علبة 100 قطعة)', level: 'مخزن عيادة 1 (د. عمر سالم)', qty: 14, unit: 'علبة', minAlert: 4, expiry: '2028-01-01', supplier: 'مؤسسة الأهرام الطبية' }
-];
-
-const INITIAL_PULSES: PulseSession[] = [
-  { id: 'PLS-1', patient: 'أحمد إبراهيم المنيري', doctor: 'د. عمر سالم', service: 'تبييض الأسنان بالليزر (Diode Laser)', area: 'الفكين العلوي والسفلي', spotSize: '8 mm', fluence: '7.5 J/cm²', pulsesUsed: 450, remainingPulses: 150, deviceCounterBefore: 14200, deviceCounterAfter: 14650, date: '2026-10-25' },
-  { id: 'PLS-2', patient: 'نورهان محمد عبد الرحمن', doctor: 'د. عمر سالم', service: 'توريد اللثة بالليزر (Gum Depigmentation)', area: 'اللثة الأمامية العلوية', spotSize: '4 mm', fluence: '6.0 J/cm²', pulsesUsed: 320, remainingPulses: 680, deviceCounterBefore: 14650, deviceCounterAfter: 14970, date: '2026-10-26' }
-];
-
-const INITIAL_STAFF: StaffMember[] = [
-  { id: 'ST-1', name: 'د. عمر سالم', role: 'مؤسس العيادة واستشاري تجميل وزراعة الأسنان', permissions: 'صلاحيات كاملة (Admin)', startTime: '11:30 AM', endTime: 'مستمر', location: 'الإسكندرية (196.132.13.25)', salary: 0, advance: 0, tasksDone: 28, status: 'متواجد بالعيادة' },
-  { id: 'ST-2', name: 'د. سارة عادل', role: 'أخصائية تقويم الأسنان والحشو التجميلي', permissions: 'العيادة + ملفات المرضى', startTime: '01:00 PM', endTime: 'مستمر', location: 'الإسكندرية (196.132.13.25)', salary: 18000, advance: 2000, tasksDone: 19, status: 'متواجد بالعيادة' },
-  { id: 'ST-3', name: 'أ. رحمة شريف', role: 'مسؤولة الاستقبال والحسابات', permissions: 'المواعيد + الخزنة + المعامل', startTime: '10:00 AM', endTime: '06:00 PM', location: 'الإسكندرية (156.210.140.137)', salary: 8500, advance: 500, tasksDone: 45, status: 'معتمد' },
-  { id: 'ST-4', name: 'أ. عبد الرحمن مجدي', role: 'مسؤول المخازن ومساعد طبيب أول', permissions: 'المخازن + طلبات المعامل', startTime: '10:30 AM', endTime: '06:30 PM', location: 'الإسكندرية (41.45.35.39)', salary: 7500, advance: 0, tasksDone: 34, status: 'معتمد' }
-];
-
-const INITIAL_TASKS: StaffTask[] = [
-  { id: 'TSK-1', title: 'تأكيد استلام عدسات الفينير للمريضة نورهان من معمل Max Dental', assignee: 'أ. رحمة شريف', status: 'مقبول وقيد التنفيذ' },
-  { id: 'TSK-2', title: 'جرد مخزن عيادة 1 وتحويل 5 علب بنج من المخزن الرئيسي', assignee: 'أ. عبد الرحمن مجدي', status: 'مكتمل' },
-  { id: 'TSK-3', title: 'إرسال مطالبة شركة AXA لشهر أكتوبر', assignee: 'أ. رحمة شريف', status: 'بانتظار الموافقة' }
-];
-
-const INITIAL_MESSAGES: ChatMessage[] = [
-  { id: 1, sender: 'أ. عبد الرحمن مجدي', role: 'المخازن', time: 'منذ ساعتين', text: 'صباح الخير يا دكتور عمر، تم تجهيز عيادة 1 وتعقيم أدوات الزراعة بالكامل.' },
-  { id: 2, sender: 'أ. رحمة شريف', role: 'الاستقبال', time: 'منذ ساعة', text: '@د. عمر سالم المريضة نورهان محمد وصلت الاستقبال ووقعت نموذج الموافقة من خلال الـ QR Code.' },
-  { id: 3, sender: 'د. عمر سالم', role: 'مدير العيادة', time: 'منذ 35 دقيقة', text: 'ممتاز يا @رحمة شريف، جهزي ملف الأشعة Panorama على شاشة العيادة فوراً.' }
-];
-
-const INITIAL_ALERTS: AlertItem[] = [
-  { id: 'AL-1', type: 'inventory', severity: 'high', title: 'قرب انتهاء مخزون جل تبييض الليزر Philips Zoom (متبقي 3 عبوات فقط)', time: 'منذ 15 دقيقة' },
-  { id: 'AL-2', type: 'lab', severity: 'medium', title: 'موعد استلام طلب معمل Max Dental Labs للمريضة نورهان محمد غداً 5:00 م', time: 'منذ ساعة' },
-  { id: 'AL-3', type: 'finance', severity: 'high', title: 'فاتورة غير مكتملة السداد للمريضة سارة محمد الشافعي (متبقي 7,000 ج.م)', time: 'منذ ساعتين' },
-  { id: 'AL-4', type: 'followup', severity: 'low', title: 'تذكير متابعة المريض أحمد إبراهيم بعد جلسة تبييض الليزر بـ 48 ساعة', time: 'اليوم' },
-  { id: 'AL-5', type: 'doctor', severity: 'medium', title: 'إخطار للطبيب د. عمر سالم قبل موعد استشارة هوليوود سمايل بـ 30 دقيقة', time: 'تلقائي' }
-];
-
-const INITIAL_AUDIT_LOGS: AuditLogItem[] = [
-  { id: 'AUD-104', time: '2026-10-29 05:45 PM', actor: 'admin (د. عمر سالم)', role: 'Administrator', action: 'SYSTEM_BOOTSTRAP', table: 'clinic_settings', details: 'تفعيل نظام Next.js + Supabase + RLS لعيادة Delight Smile' },
-  { id: 'AUD-103', time: '2026-10-29 05:30 PM', actor: 'dr.omar', role: 'Dentist', action: 'ODONTOGRAM_UPDATE', table: 'odontogram_findings', details: 'تسجيل فينير E-Max للسن #11 السطح الأمامي (F) للمريضة P-1001' },
-  { id: 'AUD-102', time: '2026-10-29 05:15 PM', actor: 'accountant', role: 'Accountant', action: 'PAYMENT_RECORDED', table: 'payments', details: 'تحصيل دفعة 15,500 ج.م للفاتورة INV-1240 وحساب نسبة الطبيب' },
-  { id: 'AUD-101', time: '2026-10-29 04:50 PM', actor: 'patient.nourhan', role: 'Patient', action: 'PORTAL_VERIFIED_ACCESS', table: 'patient_user_links', details: 'ربط حساب بوابة المريض بكود التحقق الموثق VERIFY-DS1001-9981' }
-];
+const INITIAL_TASKS: StaffTask[] = [];
+const INITIAL_MESSAGES: ChatMessage[] = [];
+const INITIAL_ALERTS: AlertItem[] = [];
+const INITIAL_AUDIT_LOGS: AuditLogItem[] = [];
 
 interface DelightSmileAppProps {
   initialTab?: string;
@@ -365,16 +225,74 @@ interface DelightSmileAppProps {
 }
 
 export default function DelightSmileApp({ initialTab = 'index_hub', initialRole = 'admin' }: DelightSmileAppProps) {
+  // Authentication & Session State
+  const [currentUserSession, setCurrentUserSession] = useState<AuthUser | null>(null);
+  const [authChecked, setAuthChecked] = useState<boolean>(false);
+
   // App Navigation & View State
   const [activeTab, setActiveTab] = useState<string>(initialTab);
-  const [currentBranch, setCurrentBranch] = useState<string>('الإسكندرية - الفرع الرئيسي');
+  const [currentBranch, setCurrentBranch] = useState<string>('عيادة جليم - برج جليم هايتس');
   const [currentRole, setCurrentRole] = useState<string>(initialRole);
-  const [currentUser, setCurrentUser] = useState<string>('admin');
-  const [userId, setUserId] = useState<string>('usr-admin-1');
-  const [mustChangePassword, setMustChangePassword] = useState<boolean>(true);
+  const [currentUser, setCurrentUser] = useState<string>('د. عمر سالم');
+  const [userId, setUserId] = useState<string>('usr-dentist-1');
+  const [mustChangePassword, setMustChangePassword] = useState<boolean>(false);
   const [locale, setLocale] = useState<'ar' | 'en'>('ar');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+
+  // Check stored session on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('delight_smile_session');
+      if (saved) {
+        const parsed = JSON.parse(saved) as AuthUser;
+        if (parsed && parsed.role) {
+          setCurrentUserSession(parsed);
+          setCurrentRole(parsed.role);
+          setCurrentUser(parsed.name);
+          setUserId(parsed.id);
+          if (parsed.role === 'patient') {
+            setActiveTab('patient_portal_isolated');
+          }
+        }
+      }
+    } catch {
+      // ignore
+    } finally {
+      setAuthChecked(true);
+    }
+  }, []);
+
+  const handleLoginSuccess = (user: AuthUser) => {
+    setCurrentUserSession(user);
+    setCurrentRole(user.role);
+    setCurrentUser(user.name);
+    setUserId(user.id);
+    if (user.role === 'patient') {
+      setActiveTab('patient_portal_isolated');
+      if (user.id.startsWith('P-')) {
+        setSelectedPatientId(user.id);
+      }
+    } else {
+      setActiveTab('index_hub');
+    }
+    try {
+      localStorage.setItem('delight_smile_session', JSON.stringify(user));
+    } catch {
+      // ignore
+    }
+    showToast(`مرحباً بك يا ${user.name} في عيادة Delight Smile`, 'success');
+  };
+
+  const handleLogout = () => {
+    setCurrentUserSession(null);
+    try {
+      localStorage.removeItem('delight_smile_session');
+    } catch {
+      // ignore
+    }
+    showToast('تم تسجيل الخروج بنجاح وقفل الجلسة', 'gold');
+  };
 
   // Business Data States
   const [patients, setPatients] = useState<Patient[]>(INITIAL_PATIENTS);
@@ -446,7 +364,26 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
   }, [theme, locale]);
 
   // Selected Active Patient
-  const activePatient = patients.find((p) => p.id === selectedPatientId) || patients[0];
+  const emptyPatient: Patient = {
+    id: '',
+    name: 'لا يوجد مريض مسجل حالياً',
+    phone: '-',
+    age: 0,
+    gender: 'غير محدد',
+    area: 'جليم - الإسكندرية',
+    insurance: 'نقدي',
+    membershipNo: '-',
+    points: 0,
+    usedPoints: 0,
+    creditBalance: 0,
+    medicalHistory: [],
+    notes: 'ابدأ بإضافة مريض جديد لتسجيل بياناته السريرية',
+    teethStatus: {},
+    treatmentSteps: [],
+    prescriptions: [],
+    consents: []
+  };
+  const activePatient = patients.length > 0 ? (patients.find((p) => p.id === selectedPatientId) || patients[0]) : emptyPatient;
 
   // Teeth numbers for FDI - Organized in standard dental education quadrants
   const q1UpperRight = dentitionMode === 'primary' ? [55, 54, 53, 52, 51] : [18, 17, 16, 15, 14, 13, 12, 11];
@@ -810,18 +747,13 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
               className="w-full bg-obsidian-800/90 border border-gold-500/25 rounded-xl pr-10 pl-4 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-gold-400"
             />
           </div>
-          <select
-            value={currentBranch}
-            onChange={(e) => setCurrentBranch(e.target.value)}
-            className="bg-obsidian-800 border border-gold-500/25 rounded-xl px-3 py-2 text-xs text-gold-200 focus:outline-none focus:border-gold-400"
-          >
-            <option value="الإسكندرية - الفرع الرئيسي">فرع الإسكندرية الرئيسي</option>
-            <option value="القاهرة الجديدة - التجمع">فرع التجمع الخامس</option>
-            <option value="الشيخ زايد">فرع الشيخ زايد</option>
-          </select>
+          <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-gold-500/10 border border-gold-500/30 text-gold-300 text-xs font-bold whitespace-nowrap">
+            <i className="fa-solid fa-location-dot text-gold-400"></i>
+            <span>عيادة جليم - برج جليم هايتس</span>
+          </div>
         </div>
 
-        {/* Quick Toolbar + Role Switcher + Lang/Theme */}
+        {/* Quick Toolbar + Lang/Theme + User & Logout */}
         <div className="flex flex-wrap items-center gap-1.5">
           <button
             onClick={() => {
@@ -934,41 +866,22 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
             <span className="hidden sm:inline">تسجيل مريض</span>
           </button>
 
-          <select
-            value={currentRole}
-            onChange={(e) => {
-              const r = e.target.value;
-              setCurrentRole(r);
-              if (r === 'patient') {
-                setActiveTab('patient_portal_isolated');
-                showToast('تم التبديل إلى بوابة المريض المستقلة (Isolated Portal)', 'gold');
-              } else {
-                showToast(`تم التبديل إلى صلاحيات الدور: ${r}`, 'gold');
-              }
-            }}
-            className="bg-obsidian-800 border border-gold-500/35 rounded-xl px-2.5 py-1.5 text-[11px] text-gold-300 font-bold focus:outline-none"
-            title="تبديل الدور وصلاحيات RBAC"
-          >
-            <option value="admin">الدور: مدير النظام (Admin)</option>
-            <option value="dentist">الدور: طبيب أسنان (Dentist)</option>
-            <option value="receptionist">الدور: موظف استقبال (Receptionist)</option>
-            <option value="assistant">الدور: مساعد طبيب (Assistant)</option>
-            <option value="accountant">الدور: محاسب (Accountant)</option>
-            <option value="inventory_manager">الدور: مسؤول مخازن (Inventory)</option>
-            <option value="patient">بوابة المريض المستقلة (Patient Portal)</option>
-          </select>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-obsidian-800 border border-gold-500/30 text-[11px] text-gold-300 font-bold">
+            <i className={`fa-solid ${currentRole === 'dentist' ? 'fa-user-doctor' : currentRole === 'admin' ? 'fa-user-shield' : currentRole === 'patient' ? 'fa-user' : 'fa-bell-concierge'} text-gold-400`}></i>
+            <span className="hidden sm:inline">{currentUser}</span>
+          </div>
 
           <button
-            onClick={openAuthModal}
-            className={`px-2.5 py-1.5 rounded-xl border text-[11px] font-bold flex items-center gap-1 transition ${
-              mustChangePassword
-                ? 'bg-rose-950/80 hover:bg-rose-900 text-rose-300 border-rose-500/40 animate-pulse'
-                : 'bg-obsidian-800 hover:bg-obsidian-700 text-emerald-300 border-emerald-500/30'
-            }`}
-            title="تسجيل الدخول / حساب admin"
+            onClick={() => {
+              document.cookie = 'delight_smile_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+              try { localStorage.removeItem('delight_smile_session'); } catch {}
+              window.location.href = '/';
+            }}
+            className="px-2.5 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-300 text-[11px] font-bold flex items-center gap-1 transition"
+            title="تسجيل الخروج وقفل الجلسة"
           >
-            <i className="fa-solid fa-user-shield"></i>
-            <span className="hidden xl:inline">{mustChangePassword ? 'تغيير كلمة السر (admin)' : 'حساب: admin'}</span>
+            <i className="fa-solid fa-right-from-bracket"></i>
+            <span className="hidden sm:inline">تسجيل الخروج</span>
           </button>
 
           <button
@@ -1266,34 +1179,49 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                     <button onClick={() => setActiveTab('appointments')} className="text-xs text-gold-400 hover:underline">عرض كل المواعيد</button>
                   </div>
                   <div className="space-y-2">
-                    {appointments.slice(0, 4).map((apt) => (
-                      <div key={apt.id} className="p-3 rounded-xl bg-obsidian-800/80 border border-gold-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-xs">
-                            {apt.time.split(' ')[0]}
-                          </div>
-                          <div>
-                            <div className="font-bold text-white text-xs">{apt.patientName}</div>
-                            <div className="text-[11px] text-slate-400">{apt.type} • {apt.doctor} ({apt.room})</div>
-                          </div>
-                        </div>
-                        <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">
-                          {apt.status}
-                        </span>
+                    {appointments.length === 0 ? (
+                      <div className="p-8 text-center text-slate-400 bg-obsidian-950/60 rounded-xl border border-gold-500/10">
+                        <i className="fa-regular fa-calendar-xmark text-2xl text-gold-400/40 mb-1.5 block"></i>
+                        <p className="font-bold text-xs text-white">لا توجد مواعيد مسجلة اليوم (No appointments scheduled)</p>
+                        <p className="text-[11px] text-slate-500 mt-0.5">تبدأ المواعيد بالظهور هنا فور تسجيل الحجوزات في فرع جليم</p>
                       </div>
-                    ))}
+                    ) : (
+                      appointments.slice(0, 4).map((apt) => (
+                        <div key={apt.id} className="p-3 rounded-xl bg-obsidian-800/80 border border-gold-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-gold-500/15 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold text-xs">
+                              {apt.time.split(' ')[0]}
+                            </div>
+                            <div>
+                              <div className="font-bold text-white text-xs">{apt.patientName}</div>
+                              <div className="text-[11px] text-slate-400">{apt.type} • {apt.doctor} ({apt.room})</div>
+                            </div>
+                          </div>
+                          <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">
+                            {apt.status}
+                          </span>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
 
                 <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
                   <h3 className="text-base font-bold text-gold-300"><i className="fa-solid fa-bell ml-2"></i>التنبيهات الفورية الذكية</h3>
                   <div className="space-y-2.5">
-                    {alerts.slice(0, 4).map((al) => (
-                      <div key={al.id} className="p-2.5 rounded-xl bg-obsidian-800 border border-gold-500/15 text-xs">
-                        <div className="font-semibold text-slate-200">{al.title}</div>
-                        <div className="text-[10px] text-gold-400 mt-1">{al.time}</div>
+                    {alerts.length === 0 ? (
+                      <div className="p-4 text-center text-slate-500 text-xs">
+                        <i className="fa-regular fa-bell-slash text-lg mb-1 block"></i>
+                        <span>لا توجد تنبيهات جديدة</span>
                       </div>
-                    ))}
+                    ) : (
+                      alerts.slice(0, 4).map((al) => (
+                        <div key={al.id} className="p-2.5 rounded-xl bg-obsidian-800 border border-gold-500/15 text-xs">
+                          <div className="font-semibold text-slate-200">{al.title}</div>
+                          <div className="text-[10px] text-gold-400 mt-1">{al.time}</div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
@@ -1309,54 +1237,44 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                   <p className="text-xs text-slate-400 mt-1">تنبيه فوري عند حجز نفس الفترة لنفس الطبيب أو نفس الغرفة مع منع التضارب برمجياً.</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => {
-                      showToast('اختبار منع تضارب المواعيد: تم حظر محاولة حجز د. عمر سالم في غرفتين متزامنتين (Conflict 409)!', 'error');
-                      setAuditLogs((prev) => [
-                        {
-                          id: 'AUD-' + (prev.length + 101),
-                          time: 'الآن',
-                          actor: 'admin',
-                          role: 'Dentist',
-                          action: 'APPOINTMENT_CONFLICT_BLOCKED',
-                          table: 'appointments',
-                          details: 'حظر حجز متزامن للطبيب د. عمر سالم في عيادة 2 أثناء وجود حجز نشط في عيادة 1'
-                        },
-                        ...prev
-                      ]);
-                    }}
-                    className="px-3 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-500/40 text-xs font-bold"
-                  >
-                    <i className="fa-solid fa-triangle-exclamation ml-1"></i> تجربة كشف التضارب (Conflict Detection)
-                  </button>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 gap-3">
-                {appointments.map((apt) => (
-                  <div key={apt.id} className="p-4 rounded-xl bg-obsidian-900 border border-gold-500/25 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-xl bg-gold-500/15 text-gold-400 font-mono font-bold text-sm">
-                        {apt.time}
-                      </div>
-                      <div>
-                        <div className="font-bold text-white text-sm">{apt.patientName}</div>
-                        <div className="text-xs text-slate-400">{apt.type} • {apt.doctor} • {apt.room}</div>
-                      </div>
+                {appointments.length === 0 ? (
+                  <div className="p-12 rounded-2xl bg-obsidian-900 border border-gold-500/20 text-center space-y-3">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-gold-500/10 border border-gold-500/25 flex items-center justify-center text-gold-400 text-2xl">
+                      <i className="fa-regular fa-calendar-xmark"></i>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => openWhatsAppLink('+201036554750', `مرحباً بك في عيادة Delight Smile، نذكرك بموعدك اليوم ${apt.time} مع ${apt.doctor}. نتطلع لرؤيتك!`)}
-                        className="px-3 py-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 text-xs font-bold"
-                      >
-                        <i className="fa-brands fa-whatsapp ml-1"></i> تذكير واتساب
-                      </button>
-                      <span className="px-3 py-1 rounded-lg bg-obsidian-800 text-gold-300 border border-gold-500/30 text-xs font-bold">
-                        {apt.status}
-                      </span>
-                    </div>
+                    <h3 className="text-base font-bold text-white">لا توجد مواعيد مسجلة (No appointments scheduled)</h3>
+                    <p className="text-xs text-slate-400">لا توجد حجوزات مسجلة اليوم لعيادة د. عمر سالم في فرع جليم</p>
                   </div>
-                ))}
+                ) : (
+                  appointments.map((apt) => (
+                    <div key={apt.id} className="p-4 rounded-xl bg-obsidian-900 border border-gold-500/25 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-xl bg-gold-500/15 text-gold-400 font-mono font-bold text-sm">
+                          {apt.time}
+                        </div>
+                        <div>
+                          <div className="font-bold text-white text-sm">{apt.patientName}</div>
+                          <div className="text-xs text-slate-400">{apt.type} • {apt.doctor} • {apt.room}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openWhatsAppLink('+201036554750', `مرحباً بك في عيادة Delight Smile، نذكرك بموعدك اليوم ${apt.time} مع ${apt.doctor}. نتطلع لرؤيتك!`)}
+                          className="px-3 py-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 text-xs font-bold"
+                        >
+                          <i className="fa-brands fa-whatsapp ml-1"></i> تذكير واتساب
+                        </button>
+                        <span className="px-3 py-1 rounded-lg bg-obsidian-800 text-gold-300 border border-gold-500/30 text-xs font-bold">
+                          {apt.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           )}
@@ -1774,28 +1692,38 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gold-500/10">
-                      {invoices.map((inv) => (
-                        <tr key={inv.id} className="hover:bg-obsidian-800/50">
-                          <td className="p-3 font-mono font-bold text-white">{inv.id}</td>
-                          <td className="p-3">{inv.patient}</td>
-                          <td className="p-3 text-slate-300">{inv.procedure}</td>
-                          <td className="p-3 font-mono font-bold text-white">{inv.total.toLocaleString()} EGP</td>
-                          <td className="p-3 font-mono text-emerald-400 font-bold">{inv.paid.toLocaleString()} EGP</td>
-                          <td className="p-3 font-mono text-rose-400 font-bold">{inv.remaining.toLocaleString()} EGP</td>
-                          <td className="p-3">{inv.doctor}</td>
-                          <td className="p-3 text-gold-300 font-bold">{inv.doctorSharePct}%</td>
-                          <td className="p-3">
-                            <button
-                              onClick={() => {
-                                showToast(`تحصيل دفعة جديدة للفاتورة ${inv.id}`, 'gold');
-                              }}
-                              className="px-2.5 py-1 rounded-lg bg-gold-500/20 text-gold-300 hover:bg-gold-500/30 font-bold"
-                            >
-                              تحصيل
-                            </button>
+                      {invoices.length === 0 ? (
+                        <tr>
+                          <td colSpan={9} className="p-12 text-center text-slate-400">
+                            <i className="fa-solid fa-file-invoice text-3xl text-gold-400/40 mb-2 block"></i>
+                            <div className="font-bold text-white text-sm">لم يتم إنشاء فواتير بعد (No invoices created)</div>
+                            <div className="text-[11px] text-slate-500 mt-1">تظهر الفواتير هنا فور تحصيل كشوفات أو إجراءات المرضى</div>
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        invoices.map((inv) => (
+                          <tr key={inv.id} className="hover:bg-obsidian-800/50">
+                            <td className="p-3 font-mono font-bold text-white">{inv.id}</td>
+                            <td className="p-3">{inv.patient}</td>
+                            <td className="p-3 text-slate-300">{inv.procedure}</td>
+                            <td className="p-3 font-mono font-bold text-white">{inv.total.toLocaleString()} EGP</td>
+                            <td className="p-3 font-mono text-emerald-400 font-bold">{inv.paid.toLocaleString()} EGP</td>
+                            <td className="p-3 font-mono text-rose-400 font-bold">{inv.remaining.toLocaleString()} EGP</td>
+                            <td className="p-3">{inv.doctor}</td>
+                            <td className="p-3 text-gold-300 font-bold">{inv.doctorSharePct}%</td>
+                            <td className="p-3">
+                              <button
+                                onClick={() => {
+                                  showToast(`تحصيل دفعة جديدة للفاتورة ${inv.id}`, 'gold');
+                                }}
+                                className="px-2.5 py-1 rounded-lg bg-gold-500/20 text-gold-300 hover:bg-gold-500/30 font-bold"
+                              >
+                                تحصيل
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -2102,72 +2030,89 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  <a
+                    href="https://wa.me/201034366020"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow"
+                  >
+                    <i className="fa-brands fa-whatsapp text-sm"></i>
+                    <span>واتساب العيادة (01034366020)</span>
+                  </a>
                   <button
                     onClick={() => {
-                      showToast('تم حظر المحاولة بواسطة سياسة عزل المرضى (RLS 403 Forbidden): لا يمكنك عرض بيانات مريض آخر!', 'error');
-                      setAuditLogs((prev) => [
-                        {
-                          id: 'AUD-' + (prev.length + 101),
-                          time: 'الآن',
-                          actor: activePatient.name,
-                          role: 'Patient',
-                          action: 'PATIENT_ISOLATION_VIOLATION_BLOCKED',
-                          table: 'patients',
-                          details: 'حظر محاولة الوصول إلى ملف مريض آخر P-1002 عبر سياسة Supabase RLS (403 Forbidden)'
-                        },
-                        ...prev
-                      ]);
+                      showToast('تم إرسال طلب الموعد بنجاح لطاقم العيادة في فرع جليم وسيتم تأكيده هاتفياً', 'success');
                     }}
-                    className="px-3 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-500/40 text-xs font-bold"
+                    className="px-4 py-2 rounded-xl gold-gradient text-obsidian-950 font-black text-xs shadow-lg"
                   >
-                    <i className="fa-solid fa-ban ml-1"></i> اختبار محاولة فتح ملف مريض آخر (IDOR Test)
-                  </button>
-                  <button
-                    onClick={() => {
-                      showToast('تم إرسال طلب الموعد بنجاح لحين مراجعة الاستقبال وتأكيده', 'success');
-                    }}
-                    className="px-3.5 py-2 rounded-xl gold-gradient text-obsidian-950 font-extrabold text-xs"
-                  >
-                    <i className="fa-solid fa-calendar-plus ml-1"></i> طلب موعد جديد
+                    <i className="fa-solid fa-calendar-plus ml-1"></i> طلب موعد جديد بالعيادة
                   </button>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
-                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-key ml-1.5"></i>التحقق الآمن</h3>
-                  <div className="p-3 rounded-xl bg-obsidian-800 border border-emerald-500/30 text-xs space-y-1">
-                    <div className="text-emerald-400 font-bold"><i className="fa-solid fa-circle-check ml-1"></i>حساب مريض موثق (Verified)</div>
-                    <div className="text-slate-300">رقم الملف: <span className="font-mono text-gold-300 font-bold">{activePatient.id}</span></div>
-                    <div className="text-slate-400">رمز التحقق: <span className="font-mono">VERIFY-DS1001-9981</span></div>
-                  </div>
-                </div>
-
-                <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
-                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-calendar-check ml-1.5"></i>مواعيدي المعتمدة</h3>
-                  <div className="space-y-2 text-xs">
-                    {appointments.slice(0, 2).map((a) => (
-                      <div key={a.id} className="p-3 rounded-xl bg-obsidian-800 border border-gold-500/20 flex justify-between">
-                        <div>
-                          <div className="font-bold text-white">{a.type}</div>
-                          <div className="text-slate-400">{a.date} • {a.time}</div>
-                        </div>
-                        <span className="text-emerald-400 font-bold">{a.status}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
-                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-file-invoice-dollar ml-1.5"></i>فواتيري المسددة</h3>
-                  <div className="space-y-2 text-xs">
-                    <div className="p-3 rounded-xl bg-obsidian-800 border border-gold-500/20">
-                      <div className="flex justify-between font-bold text-white">
-                        <span>فاتورة INV-1240</span>
-                        <span className="text-emerald-400">15,500 EGP</span>
-                      </div>
-                      <div className="text-slate-400 mt-1">فينير E-Max + زراعة سن</div>
+                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-key ml-1.5"></i>التحقق والملف الطبي</h3>
+                  <div className="p-3.5 rounded-xl bg-obsidian-800 border border-emerald-500/30 text-xs space-y-2">
+                    <div className="text-emerald-400 font-bold flex items-center gap-1.5">
+                      <i className="fa-solid fa-circle-check"></i>
+                      <span>حساب مريض موثق ومعتمد</span>
                     </div>
+                    <div className="text-slate-300">
+                      رقم الملف الطبي: <span className="font-mono text-gold-300 font-bold">{activePatient.id}</span>
+                    </div>
+                    <div className="text-slate-400">
+                      الفرع المعتمد: <span className="text-white font-bold">جليم - برج جليم هايتس</span>
+                    </div>
+                    <div className="text-slate-400">
+                      الطبيب المعالج: <span className="text-gold-300 font-bold">د. عمر سالم</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
+                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-calendar-check ml-1.5"></i>مواعيدي بالعيادة</h3>
+                  <div className="space-y-2 text-xs">
+                    {appointments.length > 0 ? (
+                      appointments.slice(0, 3).map((a) => (
+                        <div key={a.id} className="p-3 rounded-xl bg-obsidian-800 border border-gold-500/20 flex justify-between">
+                          <div>
+                            <div className="font-bold text-white">{a.type}</div>
+                            <div className="text-slate-400">{a.date} • {a.time}</div>
+                          </div>
+                          <span className="text-emerald-400 font-bold">{a.status}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 rounded-xl bg-obsidian-800/60 border border-gold-500/15 text-center text-slate-400 space-y-1">
+                        <i className="fa-regular fa-calendar-xmark text-lg text-gold-400/60"></i>
+                        <p className="font-semibold text-slate-300">لا توجد مواعيد مسجلة حالياً</p>
+                        <p className="text-[11px]">يمكنك طلب موعد جديد وسيتواصل معك الاستقبال</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
+                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-file-invoice-dollar ml-1.5"></i>سجل الفواتير والمدفوعات</h3>
+                  <div className="space-y-2 text-xs">
+                    {invoices.length > 0 ? (
+                      invoices.slice(0, 3).map((inv) => (
+                        <div key={inv.id} className="p-3 rounded-xl bg-obsidian-800 border border-gold-500/20">
+                          <div className="flex justify-between font-bold text-white">
+                            <span>فاتورة {inv.id}</span>
+                            <span className="text-emerald-400">{inv.total.toLocaleString()} EGP</span>
+                          </div>
+                          <div className="text-slate-400 mt-1">{inv.procedure} • مسدد: {inv.paid.toLocaleString()} EGP</div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 rounded-xl bg-obsidian-800/60 border border-gold-500/15 text-center text-slate-400 space-y-1">
+                        <i className="fa-solid fa-receipt text-lg text-gold-400/60"></i>
+                        <p className="font-semibold text-slate-300">لم يتم إصدار فواتير بعد</p>
+                        <p className="text-[11px]">تظهر الفواتير هنا فور اعتمادها وسدادها</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

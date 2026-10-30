@@ -15,7 +15,7 @@ class _BookingWizardScreenState extends State<BookingWizardScreen> {
   int _currentStep = 0;
 
   // Step 1: Branch
-  String _selectedBranch = 'فرع الإسكندرية الرئيسي - سموحة';
+  String _selectedBranch = 'عيادة Delight Smile للأسنان - فرع جليم';
 
   // Step 2: Service / Specialty
   String _selectedService = 'فينير وعدسات الابتسامة E-Max';
@@ -142,19 +142,30 @@ class _BookingWizardScreenState extends State<BookingWizardScreen> {
           );
         },
         steps: [
-          // Step 1: Branch Selection
+          // Step 1: Branch
           Step(
-            title: const Text('1. اختيار الفرع'),
-            subtitle: Text(_selectedBranch, style: const TextStyle(color: AppConstants.gold300, fontSize: 11)),
+            title: const Text('1. عيادة Delight Smile'),
+            subtitle: const Text('الإسكندرية - جليم - برج جليم هايتس، الدور الأول', style: TextStyle(color: AppConstants.gold300, fontSize: 11)),
             isActive: _currentStep >= 0,
-            content: DropdownButtonFormField<String>(
-              value: _selectedBranch,
-              items: const [
-                DropdownMenuItem(value: 'فرع الإسكندرية الرئيسي - سموحة', child: Text('فرع الإسكندرية الرئيسي (سموحة)')),
-                DropdownMenuItem(value: 'فرع القاهرة الجديدة - التجمع', child: Text('فرع القاهرة الجديدة (التجمع الخامس)')),
-                DropdownMenuItem(value: 'فرع الشيخ زايد - الجيزة', child: Text('فرع الشيخ زايد')),
-              ],
-              onChanged: (val) => setState(() => _selectedBranch = val!),
+            content: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppConstants.obsidian800,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppConstants.gold500.withOpacity(0.3)),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.location_on, color: AppConstants.gold400),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'عيادة Delight Smile للأسنان - فرع جليم\n(الإسكندرية - ٤ شارع أحمد فتحي، برج جليم هايتس، الدور الأول)',
+                      style: TextStyle(fontSize: 12, color: Colors.white, height: 1.4),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 

@@ -187,14 +187,14 @@ jobs:
         with:
           name: delight-smile-windows-app
           path: artifacts
-      - name: Create GitHub Release v1.0.2
+      - name: Create GitHub Release v1.0.3
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.2
-          name: "Delight Smile Dental Clinic Official Production Release v1.0.2 (Android, iOS & Windows)"
+          tag_name: v1.0.3
+          name: "Delight Smile Dental Clinic Official Production Clean Release v1.0.3 (Android, iOS & Windows)"
           body: |
-            ## Delight Smile Dental Clinic Management System - Official Release v1.0.2
-            Production build featuring the official clinic branding, golden tooth logo launcher icon, academic FDI dental chart, and full cross-platform binaries.
+            ## Delight Smile Dental Clinic Management System - Official Clean Production Release v1.0.3
+            Production-ready release: 100% purged of demo/mock data, single Gleem branch, public landing page, secure route protection, and cross-platform native binaries.
             
             ### Clinic Official Information:
             - **Doctor**: د/ عمر سالم (Dr. Omar Salem)
