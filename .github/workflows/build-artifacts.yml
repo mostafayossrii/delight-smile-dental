@@ -40,7 +40,13 @@ jobs:
           cache: true
       - name: Scaffold Android Platform Files
         working-directory: ./flutter_app
-        run: flutter create --platforms=android --org com.delightsmile .
+        run: |
+          rm -rf android
+          flutter create --platforms=android --org com.delightsmile .
+          if [ -f android/app/src/main/kotlin/com/delightsmile/delight_smile_clinic/MainActivity.kt ]; then
+            sed -i 's/FlutterActivity/FlutterFragmentActivity/g' android/app/src/main/kotlin/com/delightsmile/delight_smile_clinic/MainActivity.kt
+            sed -i 's/import io.flutter.embedding.android.FlutterActivity/import io.flutter.embedding.android.FlutterFragmentActivity/g' android/app/src/main/kotlin/com/delightsmile/delight_smile_clinic/MainActivity.kt
+          fi
       - name: Get Flutter Packages
         working-directory: ./flutter_app
         run: flutter pub get
@@ -78,12 +84,16 @@ jobs:
         run: flutter config --enable-windows-desktop
       - name: Scaffold Windows Platform Files
         working-directory: ./flutter_app
-        run: flutter create --platforms=windows --org com.delightsmile .
+        run: |
+          if (Test-Path windows) { Remove-Item -Recurse -Force windows }
+          flutter create --platforms=windows --org com.delightsmile .
       - name: Get Flutter Packages
         working-directory: ./flutter_app
         run: flutter pub get
       - name: Build Windows Executable
         working-directory: ./flutter_app
+        env:
+          CMAKE_GENERATOR: "Visual Studio 17 2022"
         run: flutter build windows --release
       - name: Compress Windows Release
         run: Compress-Archive -Path flutter_app/build/windows/x64/runner/Release/* -DestinationPath delight-smile-windows.zip

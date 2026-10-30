@@ -355,3 +355,18 @@ test('11. Patient Loyalty & VIP Reward Points Ledger', () => {
   const redeemRes = engine.manageLoyaltyPoints('DS-1001', -200, 'redeemed_discount', 'Whitening Discount');
   assert.equal(redeemRes.balanceAfter, 300);
 });
+
+test('12. Production Mock Purge: ALLOW_DEV_SEED=false ensures zero mock users, patients, or records are seeded', () => {
+  const previousVal = process.env.ALLOW_DEV_SEED;
+  try {
+    process.env.ALLOW_DEV_SEED = 'false';
+    const prodEngine = new ClinicEngine();
+    assert.equal(prodEngine.users.size, 0, 'No mock users should exist');
+    assert.equal(prodEngine.patients.size, 0, 'No mock patients should exist');
+    assert.equal(prodEngine.appointments.length, 0, 'No mock appointments should exist');
+    assert.equal(prodEngine.invoices.size, 0, 'No mock invoices should exist');
+    assert.equal(prodEngine.patientLinks.size, 0, 'No mock patient links should exist');
+  } finally {
+    process.env.ALLOW_DEV_SEED = previousVal;
+  }
+});

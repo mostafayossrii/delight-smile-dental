@@ -48,6 +48,11 @@ export class ClinicEngine {
   }
 
   _seedDefaultDevState() {
+    // Strictly purge and disable mock state when ALLOW_DEV_SEED is false or in production
+    if (process.env.ALLOW_DEV_SEED === 'false' || (process.env.NODE_ENV === 'production' && process.env.ALLOW_DEV_SEED !== 'true')) {
+      return;
+    }
+
     // Seed local development admin (admin / 123) with mandatory password change on first login
     this.users.set('admin', {
       id: 'usr-admin-1',
