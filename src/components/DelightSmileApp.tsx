@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { AnatomicalTooth, getToothNameAr, getToothType } from './AnatomicalTooth';
 
 // --- Types ---
 export interface NavItem {
@@ -447,14 +448,14 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
   // Selected Active Patient
   const activePatient = patients.find((p) => p.id === selectedPatientId) || patients[0];
 
-  // Teeth numbers for FDI
-  const upperTeeth = dentitionMode === 'primary'
-    ? [55, 54, 53, 52, 51, 61, 62, 63, 64, 65]
-    : [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
+  // Teeth numbers for FDI - Organized in standard dental education quadrants
+  const q1UpperRight = dentitionMode === 'primary' ? [55, 54, 53, 52, 51] : [18, 17, 16, 15, 14, 13, 12, 11];
+  const q2UpperLeft = dentitionMode === 'primary' ? [61, 62, 63, 64, 65] : [21, 22, 23, 24, 25, 26, 27, 28];
+  const q4LowerRight = dentitionMode === 'primary' ? [85, 84, 83, 82, 81] : [48, 47, 46, 45, 44, 43, 42, 41];
+  const q3LowerLeft = dentitionMode === 'primary' ? [71, 72, 73, 74, 75] : [31, 32, 33, 34, 35, 36, 37, 38];
 
-  const lowerTeeth = dentitionMode === 'primary'
-    ? [85, 84, 83, 82, 81, 71, 72, 73, 74, 75]
-    : [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+  const upperTeeth = [...q1UpperRight, ...q2UpperLeft];
+  const lowerTeeth = [...q4LowerRight, ...q3LowerLeft];
 
   // Helper for status badge colors
   const statusBadgeColor = (st?: { status: string }) => {
@@ -610,12 +611,19 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
     const tool = selectedChartTool;
 
     const toolLabels: Record<string, { label: string; price: number }> = {
-      veneer: { label: 'فينير تجميلي E-Max', price: 6500 },
-      implant: { label: 'زراعة سن سويسري', price: 14000 },
-      root_canal: { label: 'علاج جذور زيركون', price: 4200 },
-      crown: { label: 'طربوش زيركون', price: 3800 },
-      filling: { label: 'حشو تجميلي', price: 1200 },
-      caries: { label: 'تسوس نشط', price: 1100 }
+      composite: { label: 'حشو كومبوزيت تجميلي (Composite Restoration)', price: 1200 },
+      comp_veneer: { label: 'فينير كومبوزيت تجميلي (Composite veneer)', price: 2500 },
+      root_canal: { label: 'علاج جذور وعصب (Endodontic treatment)', price: 4200 },
+      pulpotomy: { label: 'بتر/استئصال لب السن (Pulpotomy/Pulpectomy)', price: 1800 },
+      extraction: { label: 'خلع أسنان وجراحة فم (Extraction)', price: 950 },
+      crown: { label: 'تركيبات التيجان والجسور (Crown restoration)', price: 3800 },
+      veneer: { label: 'عدسات الفينير الخزفي E-Max (Veneers)', price: 6500 },
+      denture: { label: 'أطقم أسنان صناعية (Dentures)', price: 8000 },
+      scaling: { label: 'تنظيف الجير وعلاج اللثة (Scaling)', price: 800 },
+      whitening: { label: 'تبييض الأسنان الاحترافي بالليزر (Whitening)', price: 3500 },
+      implant: { label: 'زراعة سن تيتانيوم سويسري (Dental Implant)', price: 14000 },
+      filling: { label: 'حشو كومبوزيت تجميلي', price: 1200 },
+      caries: { label: 'تسوس نشط (Active Caries)', price: 1100 }
     };
 
     if (tool === 'clear') {
@@ -1416,24 +1424,30 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
               <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-5">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-gold-500/20 pb-3">
                   <div>
-                    <h3 className="text-base font-bold text-gold-300"><i className="fa-solid fa-teeth-open ml-2"></i>مخطط الأسنان العلاجي التفاعلي</h3>
-                    <p className="text-xs text-slate-400">اختر الإجراء ثم اضغط على السن لتسجيل حالته فورياً في قاعدة البيانات.</p>
+                    <h3 className="text-base font-bold text-gold-300"><i className="fa-solid fa-teeth-open ml-2"></i>مخطط الأسنان التشريحي الأكاديمي (Dental Education Chart - FDI)</h3>
+                    <p className="text-xs text-slate-400">ترتيب أكاديمي دقيق حسب الأرباع الأربعة وخط المنتصف، بأشكال تشريحية حقيقية لتاج وجذور الأسنان (د. عمر سالم).</p>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1.5 max-w-2xl">
                     {[
-                      { id: 'veneer', label: 'فينير E-Max (6,500)', color: 'border-gold-400 text-gold-300' },
-                      { id: 'implant', label: 'زراعة سن (14,000)', color: 'border-emerald-400 text-emerald-300' },
-                      { id: 'root_canal', label: 'علاج جذور (4,200)', color: 'border-purple-400 text-purple-300' },
-                      { id: 'crown', label: 'طربوش زيركون (3,800)', color: 'border-blue-400 text-blue-300' },
-                      { id: 'filling', label: 'حشو تجميلي (1,200)', color: 'border-amber-400 text-amber-300' },
-                      { id: 'caries', label: 'تسوس (1,100)', color: 'border-rose-400 text-rose-300' },
+                      { id: 'composite', label: 'حشو كومبوزيت (1,200)', color: 'border-blue-400 text-blue-300' },
+                      { id: 'comp_veneer', label: 'فينير كومبوزيت (2,500)', color: 'border-amber-400 text-amber-300' },
+                      { id: 'root_canal', label: 'علاج جذور وعصب (4,200)', color: 'border-purple-400 text-purple-300' },
+                      { id: 'pulpotomy', label: 'علاج لب السن (1,800)', color: 'border-pink-400 text-pink-300' },
+                      { id: 'crown', label: 'طربوش زيركون (3,800)', color: 'border-cyan-400 text-cyan-300' },
+                      { id: 'veneer', label: 'عدسات فينير E-Max (6,500)', color: 'border-gold-400 text-gold-300' },
+                      { id: 'implant', label: 'زراعة سن سويسري (14,000)', color: 'border-emerald-400 text-emerald-300' },
+                      { id: 'extraction', label: 'خلع جراحي (950)', color: 'border-rose-400 text-rose-300' },
+                      { id: 'denture', label: 'طقم أسنان صناعي (8,000)', color: 'border-indigo-400 text-indigo-300' },
+                      { id: 'scaling', label: 'تنظيف جير وتلميع (800)', color: 'border-teal-400 text-teal-300' },
+                      { id: 'whitening', label: 'تبييض بالليزر (3,500)', color: 'border-amber-300 text-amber-200' },
+                      { id: 'caries', label: 'تسوس نشط (1,100)', color: 'border-red-500 text-red-400' },
                       { id: 'clear', label: 'مسح الحالة', color: 'border-slate-500 text-slate-300' }
                     ].map((t) => (
                       <button
                         key={t.id}
                         onClick={() => setSelectedChartTool(t.id)}
-                        className={`px-2.5 py-1.5 rounded-xl text-xs font-bold border transition ${
-                          selectedChartTool === t.id ? 'gold-gradient text-obsidian-950 border-gold-300 shadow' : 'bg-obsidian-800 ' + t.color
+                        className={`px-2 py-1 rounded-xl text-[11px] font-bold border transition ${
+                          selectedChartTool === t.id ? 'gold-gradient text-obsidian-950 border-gold-300 shadow font-extrabold' : 'bg-obsidian-800 ' + t.color
                         }`}
                       >
                         {t.label}
@@ -1445,29 +1459,29 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                 {/* FDI Controls: Dentition Mode & Surface Selector */}
                 <div className="p-3.5 rounded-xl bg-obsidian-800/90 border border-gold-500/25 flex flex-wrap items-center justify-between gap-3 text-xs">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-slate-400 font-semibold">نوع الأسنان (FDI):</span>
+                    <span className="text-slate-400 font-semibold">مرحلة التسنين (Dentition):</span>
                     <button
                       onClick={() => setDentitionMode('permanent')}
-                      className={`px-3 py-1 rounded-lg font-bold border ${dentitionMode === 'permanent' ? 'gold-gradient text-obsidian-950 border-gold-400' : 'bg-obsidian-900 text-slate-300 border-gold-500/20'}`}
+                      className={`px-3 py-1.5 rounded-lg font-bold border ${dentitionMode === 'permanent' ? 'gold-gradient text-obsidian-950 border-gold-400' : 'bg-obsidian-900 text-slate-300 border-gold-500/20'}`}
                     >
                       الأسنان الدائمة (11–48)
                     </button>
                     <button
                       onClick={() => setDentitionMode('primary')}
-                      className={`px-3 py-1 rounded-lg font-bold border ${dentitionMode === 'primary' ? 'gold-gradient text-obsidian-950 border-gold-400' : 'bg-obsidian-900 text-slate-300 border-gold-500/20'}`}
+                      className={`px-3 py-1.5 rounded-lg font-bold border ${dentitionMode === 'primary' ? 'gold-gradient text-obsidian-950 border-gold-400' : 'bg-obsidian-900 text-slate-300 border-gold-500/20'}`}
                     >
                       الأسنان اللبنية (51–85)
                     </button>
                   </div>
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-slate-400 font-semibold">السطح:</span>
+                    <span className="text-slate-400 font-semibold">السطح التشريحي المختار:</span>
                     {[
                       { code: 'WHOLE', label: 'السن كاملاً' },
                       { code: 'M', label: 'M (أنسي)' },
                       { code: 'D', label: 'D (وحشي)' },
-                      { code: 'O', label: 'O/I (طاحن)' },
-                      { code: 'F', label: 'B/F (وجهي)' },
-                      { code: 'L', label: 'L/P (لساني)' }
+                      { code: 'O', label: 'O/I (طاحن/قاطع)' },
+                      { code: 'F', label: 'B/F (دهليزي/وجهي)' },
+                      { code: 'L', label: 'L/P (لساني/حنكي)' }
                     ].map((sf) => (
                       <button
                         key={sf.code}
@@ -1478,60 +1492,180 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                       </button>
                     ))}
                   </div>
-                  <label className="flex items-center gap-1.5 text-amber-300 cursor-pointer">
+                  <label className="flex items-center gap-1.5 text-amber-300 cursor-pointer text-xs">
                     <input
                       type="checkbox"
                       checked={isHistoricalFinding}
                       onChange={(e) => setIsHistoricalFinding(e.target.checked)}
                       className="rounded"
                     />
-                    <span>حالة سابقة (Historical)</span>
+                    <span>حالة سابقة (Historical Finding)</span>
                   </label>
                 </div>
 
-                {/* Upper Arch */}
-                <div className="space-y-2">
-                  <div className="text-xs text-center text-gold-400 font-bold">
-                    {dentitionMode === 'primary' ? 'الفك العلوي - أسنان لبنية (55–65)' : 'الفك العلوي - أسنان دائمة (18–28)'}
+                {/* FDI Academic Dental School Odontogram Chart */}
+                <div className="bg-obsidian-950 p-4 rounded-2xl border border-gold-500/30 shadow-2xl space-y-3">
+                  {/* Upper Arch Header Labels */}
+                  <div className="flex items-center justify-between text-xs font-bold text-gold-400 px-3 border-b border-gold-500/20 pb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded bg-gold-500/15 border border-gold-500/30 text-gold-300 text-[10px]">الربع الأول (Q1)</span>
+                      <span>يمين المريض • الفك العلوي (Maxillary Right)</span>
+                    </div>
+                    <div className="text-[11px] text-amber-300 font-mono tracking-wider flex items-center gap-1">
+                      <span>خط المنتصف (MIDLINE)</span>
+                      <span>⬇</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>يسار المريض • الفك العلوي (Maxillary Left)</span>
+                      <span className="px-2 py-0.5 rounded bg-gold-500/15 border border-gold-500/30 text-gold-300 text-[10px]">الربع الثاني (Q2)</span>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-8 sm:grid-cols-16 gap-1.5">
-                    {upperTeeth.map((num) => {
-                      const st = activePatient.teethStatus[num];
-                      return (
-                        <button
+
+                  {/* Upper Arch Teeth - Strict LTR alignment ensures anatomical Q1 -> Midline -> Q2 */}
+                  <div dir="ltr" className="flex items-center justify-center gap-3 overflow-x-auto py-2 px-1">
+                    {/* Quadrant 1 (UR): 18 down to 11 */}
+                    <div className="flex items-center gap-1">
+                      {q1UpperRight.map((num) => (
+                        <AnatomicalTooth
                           key={num}
-                          onClick={() => handleToothClick(num)}
-                          className={`tooth-btn p-2 rounded-xl border flex flex-col items-center justify-center gap-1 ${statusBadgeColor(st)} ${selectedTooth === num ? 'ring-2 ring-gold-400' : ''}`}
-                        >
-                          <span className="text-[10px] font-mono font-bold">#{num}</span>
-                          <i className="fa-solid fa-tooth text-base"></i>
-                          <span className="text-[9px] truncate max-w-full">{st ? st.label.split(' ')[0] : 'سليم'}</span>
-                        </button>
-                      );
-                    })}
+                          toothNumber={num}
+                          statusData={activePatient.teethStatus[num]}
+                          isSelected={selectedTooth === num}
+                          onClick={handleToothClick}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Central Vertical Dental Midline Separator */}
+                    <div className="h-32 w-1 bg-gradient-to-b from-gold-500/20 via-gold-400 to-gold-500/20 flex flex-col items-center justify-center relative mx-1">
+                      <div className="absolute top-1/2 -translate-y-1/2 bg-obsidian-900 border border-gold-400 text-gold-300 text-[9px] font-mono px-1 py-0.5 rounded shadow z-10 whitespace-nowrap">
+                        خط المنتصف
+                      </div>
+                    </div>
+
+                    {/* Quadrant 2 (UL): 21 up to 28 */}
+                    <div className="flex items-center gap-1">
+                      {q2UpperLeft.map((num) => (
+                        <AnatomicalTooth
+                          key={num}
+                          toothNumber={num}
+                          statusData={activePatient.teethStatus[num]}
+                          isSelected={selectedTooth === num}
+                          onClick={handleToothClick}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Horizontal Occlusal Plane Separator (مستوى الإطباق) */}
+                  <div className="relative my-3 flex items-center justify-center">
+                    <div className="w-full border-t border-dashed border-gold-500/40"></div>
+                    <span className="absolute bg-obsidian-900 border border-gold-500/30 text-gold-300 text-[11px] font-bold px-4 py-0.5 rounded-full shadow-lg">
+                      مستوى الإطباق السريري • Occlusal Plane
+                    </span>
+                  </div>
+
+                  {/* Lower Arch Teeth - Strict LTR alignment ensures anatomical Q4 -> Midline -> Q3 */}
+                  <div dir="ltr" className="flex items-center justify-center gap-3 overflow-x-auto py-2 px-1">
+                    {/* Quadrant 4 (LR): 48 down to 41 */}
+                    <div className="flex items-center gap-1">
+                      {q4LowerRight.map((num) => (
+                        <AnatomicalTooth
+                          key={num}
+                          toothNumber={num}
+                          statusData={activePatient.teethStatus[num]}
+                          isSelected={selectedTooth === num}
+                          onClick={handleToothClick}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Central Vertical Dental Midline Separator */}
+                    <div className="h-32 w-1 bg-gradient-to-b from-gold-500/20 via-gold-400 to-gold-500/20 flex flex-col items-center justify-center relative mx-1">
+                      <div className="absolute top-1/2 -translate-y-1/2 bg-obsidian-900 border border-gold-400 text-gold-300 text-[9px] font-mono px-1 py-0.5 rounded shadow z-10 whitespace-nowrap">
+                        خط المنتصف
+                      </div>
+                    </div>
+
+                    {/* Quadrant 3 (LL): 31 up to 38 */}
+                    <div className="flex items-center gap-1">
+                      {q3LowerLeft.map((num) => (
+                        <AnatomicalTooth
+                          key={num}
+                          toothNumber={num}
+                          statusData={activePatient.teethStatus[num]}
+                          isSelected={selectedTooth === num}
+                          onClick={handleToothClick}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Lower Arch Footer Labels */}
+                  <div className="flex items-center justify-between text-xs font-bold text-gold-400 px-3 border-t border-gold-500/20 pt-2">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded bg-gold-500/15 border border-gold-500/30 text-gold-300 text-[10px]">الربع الرابع (Q4)</span>
+                      <span>يمين المريض • الفك السفلي (Mandibular Right)</span>
+                    </div>
+                    <div className="text-[11px] text-amber-300 font-mono tracking-wider flex items-center gap-1">
+                      <span>خط المنتصف (MIDLINE)</span>
+                      <span>⬆</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>يسار المريض • الفك السفلي (Mandibular Left)</span>
+                      <span className="px-2 py-0.5 rounded bg-gold-500/15 border border-gold-500/30 text-gold-300 text-[10px]">الربع الثالث (Q3)</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Lower Arch */}
-                <div className="space-y-2 pt-2">
-                  <div className="grid grid-cols-8 sm:grid-cols-16 gap-1.5">
-                    {lowerTeeth.map((num) => {
-                      const st = activePatient.teethStatus[num];
-                      return (
-                        <button
-                          key={num}
-                          onClick={() => handleToothClick(num)}
-                          className={`tooth-btn p-2 rounded-xl border flex flex-col items-center justify-center gap-1 ${statusBadgeColor(st)} ${selectedTooth === num ? 'ring-2 ring-gold-400' : ''}`}
-                        >
-                          <i className="fa-solid fa-tooth text-base"></i>
-                          <span className="text-[10px] font-mono font-bold">#{num}</span>
-                          <span className="text-[9px] truncate max-w-full">{st ? st.label.split(' ')[0] : 'سليم'}</span>
-                        </button>
-                      );
-                    })}
+                {/* Selected Tooth Clinical Inspection & Surface Tagging Panel */}
+                {selectedTooth && (
+                  <div className="p-4 rounded-xl bg-obsidian-800/95 border border-gold-500/35 flex flex-col md:flex-row items-center justify-between gap-4 animate-fade-in shadow-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-gold-500/20 border border-gold-400 flex items-center justify-center text-gold-300 font-mono text-base font-bold">
+                        #{selectedTooth}
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-gold-300 flex items-center gap-2">
+                          <span>السن #{selectedTooth}: {getToothNameAr(selectedTooth)}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-obsidian-950 border border-gold-500/30 text-slate-300 font-mono font-normal">
+                            FDI ISO-3950
+                          </span>
+                        </div>
+                        <div className="text-xs text-slate-300 mt-1 flex items-center gap-3">
+                          <span>الحالة المسجلة: <strong className="text-gold-400">{activePatient.teethStatus[selectedTooth]?.label || 'سليم وطبيعي (Intact)'}</strong></span>
+                          {activePatient.teethStatus[selectedTooth]?.price && (
+                            <span className="text-emerald-400 font-mono">({activePatient.teethStatus[selectedTooth].price} ج.م)</span>
+                          )}
+                          <span>الطبيب المسؤول: <strong className="text-slate-200">د. عمر سالم</strong></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs text-slate-400">تطبيق سريع:</span>
+                      <button
+                        onClick={() => handleToothClick(selectedTooth)}
+                        className="px-3 py-1.5 rounded-xl gold-gradient text-obsidian-950 font-bold text-xs shadow hover:scale-105 transition"
+                      >
+                        تطبيق الإجراء المختار ({selectedChartTool})
+                      </button>
+                      <button
+                        onClick={() => {
+                          const nextTeeth = { ...activePatient.teethStatus };
+                          delete nextTeeth[selectedTooth];
+                          setPatients((prev) =>
+                            prev.map((p) => (p.id === activePatient.id ? { ...p, teethStatus: nextTeeth } : p))
+                          );
+                          showToast(`تم إعادة السن #${selectedTooth} للحالة السليمة`, 'gold');
+                        }}
+                        className="px-2.5 py-1.5 rounded-xl bg-obsidian-900 border border-slate-600 text-slate-300 hover:text-rose-300 hover:border-rose-400 text-xs font-semibold transition"
+                      >
+                        <i className="fa-solid fa-rotate-left ml-1"></i> مسح التشخيص
+                      </button>
+                    </div>
                   </div>
-                  <div className="text-xs text-center text-gold-400 font-bold">الفك السفلي (Lower Arch)</div>
-                </div>
+                )}
               </div>
             </div>
           )}
