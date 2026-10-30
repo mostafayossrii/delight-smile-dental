@@ -51,6 +51,11 @@ jobs:
       - name: Get Flutter Packages
         working-directory: ./flutter_app
         run: flutter pub get
+      - name: Patch Plugin Gradle Specs
+        run: |
+          find /home/runner/.pub-cache -name "build.gradle" -exec sed -i 's/flutter\.compileSdkVersion/34/g' {} + || true
+          find /home/runner/.pub-cache -name "build.gradle" -exec sed -i 's/flutter\.minSdkVersion/21/g' {} + || true
+          find /home/runner/.pub-cache -name "build.gradle" -exec sed -i 's/flutter\.targetSdkVersion/34/g' {} + || true
       - name: Run Flutter Tests
         working-directory: ./flutter_app
         run: flutter test
