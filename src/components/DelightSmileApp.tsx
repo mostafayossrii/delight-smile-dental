@@ -1522,9 +1522,9 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                   </div>
 
                   {/* Upper Arch Teeth - Strict LTR alignment ensures anatomical Q1 -> Midline -> Q2 */}
-                  <div dir="ltr" className="flex items-center justify-center gap-3 overflow-x-auto py-2 px-1">
+                  <div dir="ltr" className="flex items-center justify-start xl:justify-center gap-2 overflow-x-auto py-3 px-2 w-full">
                     {/* Quadrant 1 (UR): 18 down to 11 */}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       {q1UpperRight.map((num) => (
                         <AnatomicalTooth
                           key={num}
@@ -1544,7 +1544,7 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                     </div>
 
                     {/* Quadrant 2 (UL): 21 up to 28 */}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       {q2UpperLeft.map((num) => (
                         <AnatomicalTooth
                           key={num}
@@ -1566,9 +1566,9 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                   </div>
 
                   {/* Lower Arch Teeth - Strict LTR alignment ensures anatomical Q4 -> Midline -> Q3 */}
-                  <div dir="ltr" className="flex items-center justify-center gap-3 overflow-x-auto py-2 px-1">
+                  <div dir="ltr" className="flex items-center justify-start xl:justify-center gap-2 overflow-x-auto py-3 px-2 w-full">
                     {/* Quadrant 4 (LR): 48 down to 41 */}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       {q4LowerRight.map((num) => (
                         <AnatomicalTooth
                           key={num}
@@ -1588,7 +1588,7 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                     </div>
 
                     {/* Quadrant 3 (LL): 31 up to 38 */}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       {q3LowerLeft.map((num) => (
                         <AnatomicalTooth
                           key={num}

@@ -96,7 +96,7 @@ export const AnatomicalTooth: React.FC<AnatomicalToothProps> = ({
       type="button"
       onClick={() => onClick(toothNumber)}
       title={`السن #${toothNumber} - ${toothName} ${statusData ? `(${statusData.label})` : '(سليم)'}`}
-      className={`group relative flex flex-col items-center justify-between p-1 rounded-xl transition-all duration-200 select-none focus:outline-none ${
+      className={`group relative flex flex-col items-center justify-between p-1 rounded-xl transition-all duration-200 select-none focus:outline-none flex-shrink-0 ${
         isSelected
           ? 'bg-gold-500/20 ring-2 ring-gold-400 shadow-lg shadow-gold-500/20 scale-105 z-10'
           : 'bg-obsidian-900/90 hover:bg-obsidian-800/90 hover:scale-102 border border-gold-500/20'
