@@ -47,7 +47,7 @@ jobs:
             sed -i 's/FlutterActivity/FlutterFragmentActivity/g' android/app/src/main/kotlin/com/delightsmile/delight_smile_clinic/MainActivity.kt
             sed -i 's/import io.flutter.embedding.android.FlutterActivity/import io.flutter.embedding.android.FlutterFragmentActivity/g' android/app/src/main/kotlin/com/delightsmile/delight_smile_clinic/MainActivity.kt
           fi
-          node -e "const fs = require('fs'); fs.appendFileSync('android/build.gradle', '\nsubprojects { afterEvaluate { project -> if (project.hasProperty(\"android\")) { project.android { compileSdkVersion 34 } } } }\n');"
+          node -e "const fs = require('fs'); fs.appendFileSync('android/build.gradle', '\nsubprojects { plugins.withId(\"com.android.library\") { android { compileSdk = 34 } } }\n');"
       - name: Get Flutter Packages
         working-directory: ./flutter_app
         run: flutter pub get
@@ -73,7 +73,7 @@ jobs:
 
   build-windows:
     needs: test-web
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
       - name: Setup MSVC Developer Command Prompt
