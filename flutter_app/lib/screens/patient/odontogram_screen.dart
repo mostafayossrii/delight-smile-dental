@@ -148,7 +148,7 @@ class _OdontogramScreenState extends State<OdontogramScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.between,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'تفاصيل السن المختار: #$_selectedTooth',

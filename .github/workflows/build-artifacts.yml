@@ -38,6 +38,9 @@ jobs:
           flutter-version: '3.24.3'
           channel: 'stable'
           cache: true
+      - name: Scaffold Android Platform Files
+        working-directory: ./flutter_app
+        run: flutter create --platforms=android --org com.delightsmile .
       - name: Get Flutter Packages
         working-directory: ./flutter_app
         run: flutter pub get
@@ -73,6 +76,9 @@ jobs:
           cache: true
       - name: Enable Windows Desktop
         run: flutter config --enable-windows-desktop
+      - name: Scaffold Windows Platform Files
+        working-directory: ./flutter_app
+        run: flutter create --platforms=windows --org com.delightsmile .
       - name: Get Flutter Packages
         working-directory: ./flutter_app
         run: flutter pub get

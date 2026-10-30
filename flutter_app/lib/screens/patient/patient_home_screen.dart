@@ -182,7 +182,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildActionTile(
-                  icon: Icons.teeth,
+                  icon: Icons.health_and_safety,
                   title: 'مخطط الأسنان FDI',
                   subtitle: 'سجل الأسنان الرقمي',
                   color: AppConstants.successEmerald,
@@ -221,7 +221,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.between,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             apt.procedureName,
