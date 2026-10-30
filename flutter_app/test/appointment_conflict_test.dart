@@ -37,11 +37,23 @@ void main() {
       );
     });
 
-    test('Available slots exclude already booked periods', () {
+    test('Available slots follow official clinic schedule and Friday closed', () {
       final service = AppointmentService();
-      final slots = service.getAvailableSlots('dent-1', DateTime.now());
-      expect(slots.contains('12:00 PM'), false);
-      expect(slots.contains('10:00 AM'), true);
+      // Friday is closed
+      final fridayDate = DateTime(2026, 10, 30); // Friday
+      expect(service.getAvailableSlots('dent-1', fridayDate).isEmpty, true);
+
+      // Saturday (12 PM - 6 PM)
+      final saturdayDate = DateTime(2026, 10, 31); // Saturday
+      final satSlots = service.getAvailableSlots('dent-1', saturdayDate);
+      expect(satSlots.contains('12:00 PM'), true);
+      expect(satSlots.contains('05:30 PM'), true);
+
+      // Sunday (4 PM - 10 PM)
+      final sundayDate = DateTime(2026, 11, 1); // Sunday
+      final sunSlots = service.getAvailableSlots('dent-1', sundayDate);
+      expect(sunSlots.contains('04:00 PM'), true);
+      expect(sunSlots.contains('09:30 PM'), true);
     });
   });
 }
