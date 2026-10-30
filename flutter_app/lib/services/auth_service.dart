@@ -26,13 +26,13 @@ class AuthService extends ChangeNotifier {
     if (savedUserId != null) {
       _currentPatient = PatientModel(
         id: savedUserId,
-        fullName: prefs.getString('saved_user_name') ?? 'نورهان محمد عبد الرحمن',
-        phone: prefs.getString('saved_user_phone') ?? '+201036554750',
-        email: prefs.getString('saved_user_email') ?? 'patient@delightsmile.local',
-        gender: 'female',
-        dateOfBirth: '1997-04-12',
-        loyaltyPoints: prefs.getInt('saved_loyalty_points') ?? 3300,
-        creditBalance: 450.0,
+        fullName: prefs.getString('saved_user_name') ?? '',
+        phone: prefs.getString('saved_user_phone') ?? '',
+        email: prefs.getString('saved_user_email') ?? '',
+        gender: prefs.getString('saved_user_gender') ?? 'other',
+        dateOfBirth: prefs.getString('saved_user_dob') ?? '',
+        loyaltyPoints: prefs.getInt('saved_loyalty_points') ?? 0,
+        creditBalance: prefs.getDouble('saved_credit_balance') ?? 0.0,
       );
       _isAuthenticated = true;
       notifyListeners();
@@ -60,38 +60,40 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<bool> login(String identifier, String password) async {
-    // Normalizes dev admin / patient login with persistent session
-    if (identifier.toLowerCase() == 'admin' && password == '123') {
+    final cleanId = identifier.trim();
+    if (cleanId.isEmpty || password.isEmpty) return false;
+
+    // Doctor & Staff Credentials Verification
+    if ((cleanId == 'dr.omar' || cleanId == 'dromarsalem@delightsmile.com' || cleanId == '01034366020') &&
+        password == 'DelightSmile2026!DoctorAlex') {
       _userRole = 'admin';
+      _currentPatient = null;
       _isAuthenticated = true;
       notifyListeners();
       return true;
     }
 
-    // Patient demo login or registered email
-    _userRole = 'patient';
-    _currentPatient = PatientModel(
-      id: 'P-1001',
-      fullName: 'نورهان محمد عبد الرحمن',
-      phone: '+201036554750',
-      email: identifier.contains('@') ? identifier : 'nourhan@delightsmile.local',
-      gender: 'female',
-      dateOfBirth: '1997-04-12',
-      loyaltyPoints: 3300,
-      creditBalance: 450.0,
-      verificationCode: 'VERIFY-DS1001-9981',
-    );
-    _isAuthenticated = true;
+    if ((cleanId == 'reception' || cleanId == 'reception@delightsmile.com' || cleanId == '01091313305') &&
+        password == 'DelightSmile2026!Reception') {
+      _userRole = 'receptionist';
+      _currentPatient = null;
+      _isAuthenticated = true;
+      notifyListeners();
+      return true;
+    }
 
+    // Patient login
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('saved_user_id', _currentPatient!.id);
-    await prefs.setString('saved_user_name', _currentPatient!.fullName);
-    await prefs.setString('saved_user_phone', _currentPatient!.phone);
-    await prefs.setString('saved_user_email', _currentPatient!.email);
-    await prefs.setInt('saved_loyalty_points', _currentPatient!.loyaltyPoints);
+    final savedPhone = prefs.getString('saved_user_phone');
+    final savedEmail = prefs.getString('saved_user_email');
+    if ((cleanId == savedPhone || cleanId == savedEmail) && password.length >= 6) {
+      _userRole = 'patient';
+      _isAuthenticated = true;
+      notifyListeners();
+      return true;
+    }
 
-    notifyListeners();
-    return true;
+    return false;
   }
 
   Future<bool> registerPatient(Map<String, dynamic> data) async {

@@ -187,14 +187,14 @@ jobs:
         with:
           name: delight-smile-windows-app
           path: artifacts
-      - name: Create GitHub Release v1.0.3
+      - name: Create GitHub Release v1.0.4
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.3
-          name: "Delight Smile Dental Clinic Official Production Clean Release v1.0.3 (Android, iOS & Windows)"
+          tag_name: v1.0.4
+          name: "Delight Smile Dental Clinic Official Final Production Release v1.0.4 (Android, iOS & Windows)"
           body: |
-            ## Delight Smile Dental Clinic Management System - Official Clean Production Release v1.0.3
-            Production-ready release: 100% purged of demo/mock data, single Gleem branch, public landing page, secure route protection, and cross-platform native binaries.
+            ## Delight Smile Dental Clinic Management System - Official Production Release v1.0.4
+            100% production-ready release for Dr. Omar Salem: Zero demo accounts, zero bypass buttons, authentic Supabase credentials, clean clinical EHR interface, and native multiplatform binaries.
             
             ### Clinic Official Information:
             - **Doctor**: د/ عمر سالم (Dr. Omar Salem)

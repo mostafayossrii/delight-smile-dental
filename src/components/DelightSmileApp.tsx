@@ -168,27 +168,22 @@ export interface AuditLogItem {
   details: string;
 }
 
-// Initial Data Fixtures matching delight_smile_cms.html
+// Navigation Items for Dental Practice Management
 const INITIAL_NAV_ITEMS: NavItem[] = [
-  { id: 'index_hub', title: 'فهرس النظام الشامل', icon: 'fa-table-cells-large', badge: '16 ميزة', desc: 'كل حاجة في برنامج واحد - اضغط على الميزة للانتقال إليها' },
-  { id: 'dashboard', title: 'لوحة التحكم والتحليلات', icon: 'fa-chart-pie', badge: '', desc: 'رؤية شاملة لأداء العيادة، تمركز المرضى، وأوقات الانتظار' },
-  { id: 'appointments', title: 'الحجوزات والمواعيد', icon: 'fa-calendar-check', badge: '8 اليوم', desc: 'تنظيم الغرف وتنبيه فوري عند حجز نفس الفترة لنفس الطبيب' },
-  { id: 'patients', title: 'ملفات المرضى ومخطط الأسنان', icon: 'fa-tooth', badge: 'متكامل', desc: 'مخطط علاجي للأسنان، خطط علاجية، روشتات، وأشعة X-Ray' },
-  { id: 'qrcode', title: 'QR-Code وبوابة المريض', icon: 'fa-qrcode', badge: 'ذكي', desc: 'تسجيل ذاتي، استرجاع الفاتورة والروشتة، ونموذج الموافقة والتوقيع' },
-  { id: 'finance', title: 'الحسابات والفواتير والخزن', icon: 'fa-sack-dollar', badge: 'ضريبي', desc: 'فواتير المرضى، نسب الأطباء، خزن افتراضية، وفاتورة إلكترونية' },
-  { id: 'finance_analytics', title: 'تحليلات الحسابات والأرباح', icon: 'fa-chart-line', badge: 'Sankey', desc: 'تقارير الأرباح والخسارة وحركة النقود والمصاريف لكل بند' },
-  { id: 'insurance', title: 'التأمين وحساباته', icon: 'fa-shield-heart', badge: '4 شركات', desc: 'شركات التأمين، نسب التحمل، وإنشاء المطالبات المالية' },
-  { id: 'labs', title: 'المعامل وطلباتها', icon: 'fa-flask', badge: '3 نشط', desc: 'إرسال طلبات المعمل بالواتساب، تحديد لون السن، وتأكيد الاستلام' },
-  { id: 'inventory', title: 'الموردين والمخازن', icon: 'fa-boxes-stacked', badge: '3 مستويات', desc: 'مخزن رئيسي بالصندوق، فرعي بالوحدة، ومخازن العيادات الداخلية' },
-  { id: 'pulses', title: 'حساب النبضات والليزر', icon: 'fa-wand-magic-sparkles', badge: 'عداد ذكي', desc: 'متابعة نبضات الليزر التجميلي وتبييض الأسنان ومقارنة عداد الجهاز' },
-  { id: 'staff', title: 'إدارة الموظفين والحضور', icon: 'fa-user-doctor', badge: 'GPS', desc: 'بصمة الحضور بالموقع الجغرافي، المهام، المرتبات والسُلف' },
-  { id: 'whatsapp_sms', title: 'واتساب بوت والرسائل النصية', icon: 'fa-brands fa-whatsapp', badge: '24/7 تلقائي', desc: 'ردود تلقائية 100%، تذكير بالمواعيد، وحملات SMS ديناميكية' },
-  { id: 'internal_chat', title: 'التواصل الداخلي', icon: 'fa-comments', badge: 'فوري', desc: 'دردشة سريعة بين الأطباء والاستقبال مع منشن @ وإرسال ملفات' },
-  { id: 'loyalty', title: 'نظام النقاط والولاء', icon: 'fa-gem', badge: 'VIP', desc: 'كسب نقاط مع كل زيارة واستبدالها بخصومات وعروض خاصة' },
-  { id: 'alerts_support', title: 'الإنذارات والدعم الفني', icon: 'fa-bell', badge: '5 تنبيهات', desc: 'إنذارات الفواتير والمعامل، ترحيل الإكسل، ودعم فني 24/7' },
-  { id: 'patient_portal_isolated', title: 'بوابة المريض المستقلة (Portal)', icon: 'fa-user-lock', badge: 'معزول آمن', desc: 'واجهة المريض المستقلة برمز تحقق موثق وعزل كامل للبيانات (RLS)' },
-  { id: 'rbac_security', title: 'الصلاحيات وسجل الأمان (RBAC)', icon: 'fa-shield-halved', badge: '6 أدوار', desc: 'إدارة حسابات الموظفين، صلاحيات الأدوار، وسجل التدقيق الأمني Audit Logs' },
-  { id: 'fullstack_arch', title: 'معمارية Next.js + Supabase + PWA', icon: 'fa-database', badge: '38 جدول', desc: 'كود SQL، سياسات RLS، نتائج الاختبارات الآلية، وتصدير التقارير CSV' }
+  { id: 'dashboard', title: 'لوحة التحكم والتحليلات', icon: 'fa-chart-pie', badge: '', desc: 'رؤية شاملة لأداء العيادة، الإحصائيات الحيوية، وأوقات العمل' },
+  { id: 'appointments', title: 'الحجوزات والمواعيد', icon: 'fa-calendar-check', badge: '', desc: 'جدول المواعيد وتنظيم الحجوزات اليومية ومنع التضارب' },
+  { id: 'patients', title: 'ملفات المرضى ومخطط الأسنان', icon: 'fa-tooth', badge: '', desc: 'مخطط الأسنان التفاعلي الأكاديمي، الخطط العلاجية، والأشعة' },
+  { id: 'finance', title: 'الحسابات والفواتير والخزينة', icon: 'fa-sack-dollar', badge: '', desc: 'فواتير المرضى، سندات القبض، المدفوعات والخزينة النقدية' },
+  { id: 'finance_analytics', title: 'تحليلات الإيرادات والمصروفات', icon: 'fa-chart-line', badge: '', desc: 'تقارير الأرباح والمصروفات وصافي الدخل الشهري' },
+  { id: 'insurance', title: 'التأمين الطبي والتعاقدات', icon: 'fa-shield-heart', badge: '', desc: 'شركات التأمين، نسب التحمل، ومطالبات التعويض' },
+  { id: 'labs', title: 'المعامل وتركيبات الأسنان', icon: 'fa-flask', badge: '', desc: 'أوامر المعمل وتتبع التركيبات والعدسات ولون الأسنان' },
+  { id: 'inventory', title: 'المخزون والمستلزمات الطبية', icon: 'fa-boxes-stacked', badge: '', desc: 'أرصدة المواد الاستهلاكية، حشوات الأسنان، والتنبيه بالنواقص' },
+  { id: 'pulses', title: 'جلسات الليزر والتبييض', icon: 'fa-wand-magic-sparkles', badge: '', desc: 'متابعة عداد نبضات الليزر وتبييض الأسنان التجميلي' },
+  { id: 'staff', title: 'الكادر الطبي والحضور', icon: 'fa-user-doctor', badge: '', desc: 'طاقم العمل، تسجيل الحضور والانصراف، وجدول النبطشيات' },
+  { id: 'whatsapp_sms', title: 'إشعارات الواتساب والرسائل', icon: 'fa-brands fa-whatsapp', badge: '', desc: 'تأكيد المواعيد آلياً وروابط التواصل السريع مع المرضى' },
+  { id: 'internal_chat', title: 'التواصل الداخلي للعيادة', icon: 'fa-comments', badge: '', desc: 'رسائل التنسيق الفوري بين الطبيب والاستقبال ومساعد الطبيب' },
+  { id: 'loyalty', title: 'برنامج الولاء ونقاط المرضى', icon: 'fa-gem', badge: '', desc: 'نقاط الزيارات الدورية وخصومات المرضى المعتمدين' },
+  { id: 'alerts_support', title: 'التنبيهات والدعم الفني', icon: 'fa-bell', badge: '', desc: 'إشعارات النظام الهامة والدعم الفني السحابي للعيادة' }
 ];
 
 const INITIAL_PATIENTS: Patient[] = [];
@@ -224,7 +219,7 @@ interface DelightSmileAppProps {
   initialRole?: string;
 }
 
-export default function DelightSmileApp({ initialTab = 'index_hub', initialRole = 'admin' }: DelightSmileAppProps) {
+export default function DelightSmileApp({ initialTab = 'dashboard', initialRole = 'dentist' }: DelightSmileAppProps) {
   // Authentication & Session State
   const [currentUserSession, setCurrentUserSession] = useState<AuthUser | null>(null);
   const [authChecked, setAuthChecked] = useState<boolean>(false);
@@ -252,7 +247,7 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
           setCurrentUser(parsed.name);
           setUserId(parsed.id);
           if (parsed.role === 'patient') {
-            setActiveTab('patient_portal_isolated');
+            window.location.href = '/portal';
           }
         }
       }
@@ -269,12 +264,9 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
     setCurrentUser(user.name);
     setUserId(user.id);
     if (user.role === 'patient') {
-      setActiveTab('patient_portal_isolated');
-      if (user.id.startsWith('P-')) {
-        setSelectedPatientId(user.id);
-      }
+      window.location.href = '/portal';
     } else {
-      setActiveTab('index_hub');
+      setActiveTab('dashboard');
     }
     try {
       localStorage.setItem('delight_smile_session', JSON.stringify(user));
@@ -716,9 +708,9 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
           </button>
 
           <button
-            onClick={() => setActiveTab('index_hub')}
+            onClick={() => setActiveTab('dashboard')}
             className="flex items-center gap-3 text-right group focus:outline-none"
-            title="اضغط على الشعار للرجوع إلى الفهرس في أي صفحة"
+            title="الرئيسية"
           >
             <div className="h-11 w-16 rounded-lg overflow-hidden border border-gold-500/40 bg-black flex items-center justify-center p-0.5 shadow-md group-hover:border-gold-400 transition">
               <img src="/logo.jpg" alt="Delight Smile Logo" className="max-w-full h-auto object-contain" />
@@ -727,7 +719,7 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
               <div className="flex items-center gap-2">
                 <h1 className="text-base sm:text-lg font-extrabold tracking-wide gold-text-gradient">Delight Smile</h1>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/15 text-gold-300 border border-gold-500/30 font-semibold">
-                  PRO 2026
+                  v1.0.3
                 </span>
               </div>
               <p className="text-xs text-slate-400">د. عمر سالم • نظام الإدارة المتكامل للعيادة</p>
@@ -901,12 +893,12 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
           </button>
 
           <button
-            onClick={() => setActiveTab('index_hub')}
+            onClick={() => setActiveTab('dashboard')}
             className="px-2.5 py-1.5 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-gold-300 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 transition"
-            title="الفهرس السريع"
+            title="لوحة التحكم الرئيسية"
           >
-            <i className="fa-solid fa-table-cells-large text-gold-400"></i>
-            <span className="hidden sm:inline">الفهرس</span>
+            <i className="fa-solid fa-chart-pie text-gold-400"></i>
+            <span className="hidden sm:inline">الرئيسية</span>
           </button>
 
           <button
@@ -927,21 +919,19 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                 >
                   <div>
                     <label className="block text-slate-300 mb-1">اسم المريض:</label>
-                    <input name="pName" required defaultValue="نورهان محمد عبد الرحمن" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white" />
+                    <input name="pName" required placeholder="أدخل اسم المريض الثلاثي" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white" />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="block text-slate-300 mb-1">الطبيب المعالج:</label>
                       <select name="doc" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white">
                         <option value="د. عمر سالم">د. عمر سالم</option>
-                        <option value="د. سارة عادل">د. سارة عادل</option>
                       </select>
                     </div>
                     <div>
                       <label className="block text-slate-300 mb-1">الغرفة / العيادة:</label>
                       <select name="room" className="w-full bg-obsidian-800 border border-gold-500/30 rounded-xl px-3 py-2 text-white">
-                        <option value="عيادة 1 (VIP تجميل وزراعة)">عيادة 1 (VIP)</option>
-                        <option value="عيادة 2 (التقويم والحشو)">عيادة 2 (تقويم)</option>
+                        <option value="عيادة د. عمر سالم (فرع جليم)">عيادة د. عمر سالم (فرع جليم)</option>
                       </select>
                     </div>
                   </div>
@@ -1055,7 +1045,7 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> متصل بالسحابة
               </span>
             </div>
-            <div className="text-[10px] text-slate-500 mt-1">Next.js App Router • Supabase PostgreSQL (Free)</div>
+            <div className="text-[10px] text-slate-400 mt-1 font-sans">نظام سحابي مشفر ومعتمد • Delight Smile Clinic v1.0.3</div>
           </div>
         </aside>
 
@@ -1641,16 +1631,16 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                   </div>
                   <button
                     onClick={() => {
-                      showToast('تم اعتماد وحفظ التوقيع الإلكتروني وربطه بالملف الطبي للمريضة نورهان محمد!', 'success');
+                      showToast('تم اعتماد وحفظ التوقيع الإلكتروني وربطه بالملف الطبي للمريض بنجاح!', 'success');
                       setAuditLogs((prev) => [
                         {
                           id: 'AUD-' + (prev.length + 101),
                           time: 'الآن',
-                          actor: 'patient.nourhan',
+                          actor: activePatient.name || 'المريض',
                           role: 'Patient',
                           action: 'CONSENT_SIGNED',
                           table: 'consent_forms',
-                          details: 'اعتماد التوقيع الرقمي للموافقة على زراعة الأسنان وعدسات الفينير'
+                          details: 'اعتماد التوقيع الرقمي للموافقة على الخطة العلاجية'
                         },
                         ...prev
                       ]);
@@ -1960,19 +1950,27 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="p-4 rounded-xl bg-obsidian-900 border border-gold-500/20 text-center">
-                  <div className="text-xs text-slate-400">رصيد نقاط المريضة نورهان</div>
-                  <div className="text-3xl font-extrabold text-gold-400 mt-2 font-mono">3,300 نقطة</div>
-                  <div className="text-xs text-emerald-400 mt-1">فئة العضوية: الذهبية VIP</div>
+                  <div className="text-xs text-slate-400">رصيد نقاط المريض</div>
+                  <div className="text-3xl font-extrabold text-gold-400 mt-2 font-mono">
+                    {patients.length > 0 ? (activePatient.points || 0).toLocaleString() : '0'} نقطة
+                  </div>
+                  <div className="text-xs text-emerald-400 mt-1">
+                    فئة العضوية: {patients.length > 0 && (activePatient.points || 0) > 1000 ? 'الذهبية VIP' : 'عضوية قياسية'}
+                  </div>
                 </div>
                 <div className="p-4 rounded-xl bg-obsidian-900 border border-gold-500/20 text-center">
                   <div className="text-xs text-slate-400">القيمة المالية المعادلة</div>
-                  <div className="text-3xl font-extrabold text-white mt-2 font-mono">330 EGP</div>
+                  <div className="text-3xl font-extrabold text-white mt-2 font-mono">
+                    {patients.length > 0 ? ((activePatient.points || 0) / 10).toLocaleString() : '0'} EGP
+                  </div>
                   <div className="text-xs text-slate-400 mt-1">10 نقاط = 1 جنيه مصري</div>
                 </div>
                 <div className="p-4 rounded-xl bg-obsidian-900 border border-gold-500/20 text-center">
-                  <div className="text-xs text-slate-400">النقاط المستبدلة سابقاً</div>
-                  <div className="text-3xl font-extrabold text-slate-300 mt-2 font-mono">1,200 نقطة</div>
-                  <div className="text-xs text-slate-400 mt-1">تم خصمها في الفاتورة INV-1240</div>
+                  <div className="text-xs text-slate-400">النقاط المستبدلة في الفواتير</div>
+                  <div className="text-3xl font-extrabold text-slate-300 mt-2 font-mono">
+                    {patients.length > 0 ? (activePatient.usedPoints || 0).toLocaleString() : '0'} نقطة
+                  </div>
+                  <div className="text-xs text-slate-400 mt-1">تُخصم تلقائياً عند اعتماد السداد</div>
                 </div>
               </div>
             </div>
@@ -2010,183 +2008,6 @@ export default function DelightSmileApp({ initialTab = 'index_hub', initialRole 
                     <span className="text-gold-400 font-bold">{al.time}</span>
                   </div>
                 ))}
-              </div>
-            </div>
-          )}
-
-          {/* Module 17: Isolated Patient Portal */}
-          {activeTab === 'patient_portal_isolated' && (
-            <div className="space-y-6">
-              <div className="bg-gradient-to-l from-teal-950/90 via-obsidian-900 to-obsidian-900 p-5 rounded-2xl border border-teal-500/40 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-                <div>
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/40 font-bold">
-                    <i className="fa-solid fa-shield-halved ml-1"></i> بوابة المريض المستقلة (Row Level Security Isolated Portal)
-                  </span>
-                  <h2 className="text-xl font-extrabold text-white mt-1.5">
-                    مرحباً بك في بوابة المريض — {activePatient.name} ({activePatient.id})
-                  </h2>
-                  <p className="text-xs text-slate-300 mt-1">
-                    عزل كامل للبيانات بواسطة Supabase RLS. لا يمكن لأي مريض استعراض بيانات مريض آخر.
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <a
-                    href="https://wa.me/201034366020"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow"
-                  >
-                    <i className="fa-brands fa-whatsapp text-sm"></i>
-                    <span>واتساب العيادة (01034366020)</span>
-                  </a>
-                  <button
-                    onClick={() => {
-                      showToast('تم إرسال طلب الموعد بنجاح لطاقم العيادة في فرع جليم وسيتم تأكيده هاتفياً', 'success');
-                    }}
-                    className="px-4 py-2 rounded-xl gold-gradient text-obsidian-950 font-black text-xs shadow-lg"
-                  >
-                    <i className="fa-solid fa-calendar-plus ml-1"></i> طلب موعد جديد بالعيادة
-                  </button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
-                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-key ml-1.5"></i>التحقق والملف الطبي</h3>
-                  <div className="p-3.5 rounded-xl bg-obsidian-800 border border-emerald-500/30 text-xs space-y-2">
-                    <div className="text-emerald-400 font-bold flex items-center gap-1.5">
-                      <i className="fa-solid fa-circle-check"></i>
-                      <span>حساب مريض موثق ومعتمد</span>
-                    </div>
-                    <div className="text-slate-300">
-                      رقم الملف الطبي: <span className="font-mono text-gold-300 font-bold">{activePatient.id}</span>
-                    </div>
-                    <div className="text-slate-400">
-                      الفرع المعتمد: <span className="text-white font-bold">جليم - برج جليم هايتس</span>
-                    </div>
-                    <div className="text-slate-400">
-                      الطبيب المعالج: <span className="text-gold-300 font-bold">د. عمر سالم</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
-                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-calendar-check ml-1.5"></i>مواعيدي بالعيادة</h3>
-                  <div className="space-y-2 text-xs">
-                    {appointments.length > 0 ? (
-                      appointments.slice(0, 3).map((a) => (
-                        <div key={a.id} className="p-3 rounded-xl bg-obsidian-800 border border-gold-500/20 flex justify-between">
-                          <div>
-                            <div className="font-bold text-white">{a.type}</div>
-                            <div className="text-slate-400">{a.date} • {a.time}</div>
-                          </div>
-                          <span className="text-emerald-400 font-bold">{a.status}</span>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="p-4 rounded-xl bg-obsidian-800/60 border border-gold-500/15 text-center text-slate-400 space-y-1">
-                        <i className="fa-regular fa-calendar-xmark text-lg text-gold-400/60"></i>
-                        <p className="font-semibold text-slate-300">لا توجد مواعيد مسجلة حالياً</p>
-                        <p className="text-[11px]">يمكنك طلب موعد جديد وسيتواصل معك الاستقبال</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow space-y-4">
-                  <h3 className="text-sm font-bold text-gold-300"><i className="fa-solid fa-file-invoice-dollar ml-1.5"></i>سجل الفواتير والمدفوعات</h3>
-                  <div className="space-y-2 text-xs">
-                    {invoices.length > 0 ? (
-                      invoices.slice(0, 3).map((inv) => (
-                        <div key={inv.id} className="p-3 rounded-xl bg-obsidian-800 border border-gold-500/20">
-                          <div className="flex justify-between font-bold text-white">
-                            <span>فاتورة {inv.id}</span>
-                            <span className="text-emerald-400">{inv.total.toLocaleString()} EGP</span>
-                          </div>
-                          <div className="text-slate-400 mt-1">{inv.procedure} • مسدد: {inv.paid.toLocaleString()} EGP</div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="p-4 rounded-xl bg-obsidian-800/60 border border-gold-500/15 text-center text-slate-400 space-y-1">
-                        <i className="fa-solid fa-receipt text-lg text-gold-400/60"></i>
-                        <p className="font-semibold text-slate-300">لم يتم إصدار فواتير بعد</p>
-                        <p className="text-[11px]">تظهر الفواتير هنا فور اعتمادها وسدادها</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Module 18: RBAC & Audit Logs */}
-          {activeTab === 'rbac_security' && (
-            <div className="space-y-6">
-              <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow">
-                <h2 className="text-xl font-extrabold gold-text-gradient"><i className="fa-solid fa-shield-halved ml-2"></i>الصلاحيات وسجل التدقيق الأمني (RBAC & Audit Logs)</h2>
-                <p className="text-xs text-slate-400 mt-1">فصل صارم بين صلاحيات 6 أدوار وظيفية + دور المريض مع تسجيل كل عملية حساسة في سجل التدقيق.</p>
-              </div>
-              <div className="bg-obsidian-900 rounded-2xl gold-border-glow overflow-hidden">
-                <div className="p-4 border-b border-gold-500/20 font-bold text-sm text-gold-300">سجل العمليات والتدقيق الأمني (Live Audit Trail):</div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-right text-xs">
-                    <thead className="bg-obsidian-800 text-slate-300 border-b border-gold-500/20">
-                      <tr>
-                        <th className="p-3">رقم السجل</th>
-                        <th className="p-3">التوقيت</th>
-                        <th className="p-3">المستخدم</th>
-                        <th className="p-3">الدور</th>
-                        <th className="p-3">الحدث</th>
-                        <th className="p-3">الجدول</th>
-                        <th className="p-3">التفاصيل</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gold-500/10">
-                      {auditLogs.map((log) => (
-                        <tr key={log.id} className="hover:bg-obsidian-800/50">
-                          <td className="p-3 font-mono font-bold text-gold-400">{log.id}</td>
-                          <td className="p-3 text-slate-400 font-mono">{log.time}</td>
-                          <td className="p-3 font-bold text-white">{log.actor}</td>
-                          <td className="p-3"><span className="px-2 py-0.5 rounded bg-gold-500/15 text-gold-300 font-bold">{log.role}</span></td>
-                          <td className="p-3 font-mono font-bold text-emerald-400">{log.action}</td>
-                          <td className="p-3 font-mono text-slate-400">{log.table}</td>
-                          <td className="p-3 text-slate-300">{log.details}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Module 19: Full-Stack Architecture */}
-          {activeTab === 'fullstack_arch' && (
-            <div className="space-y-6">
-              <div className="bg-obsidian-900 p-5 rounded-2xl gold-border-glow">
-                <h2 className="text-xl font-extrabold gold-text-gradient"><i className="fa-solid fa-database ml-2"></i>معمارية Next.js + Supabase + PWA</h2>
-                <p className="text-xs text-slate-400 mt-1">تطبيق متكامل مبني بالكامل على باقات مجانية 100% (Vercel Hobby + Supabase Free + WhatsApp Direct wa.me).</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div className="p-4 rounded-xl bg-obsidian-900 border border-gold-500/25 space-y-2">
-                  <div className="font-bold text-gold-300">قاعدة البيانات & RLS (Supabase PostgreSQL):</div>
-                  <ul className="list-disc list-inside space-y-1 text-slate-300">
-                    <li>38 جدولاً متكاملاً مع مفاتيح أجنبية وفهارس B-Tree</li>
-                    <li>قيود GiST Exclusion لمنع تضارب حجوزات الأطباء والغرف متزامناً</li>
-                    <li>Row Level Security (RLS) لعزل سجلات المرضى بالكامل</li>
-                    <li>مخزن خاص <code className="text-emerald-400">clinical-private</code> بـ Signed URLs</li>
-                  </ul>
-                </div>
-                <div className="p-4 rounded-xl bg-obsidian-900 border border-gold-500/25 space-y-2">
-                  <div className="font-bold text-gold-300">الاستضافة والواجهات المجانية 100%:</div>
-                  <ul className="list-disc list-inside space-y-1 text-slate-300">
-                    <li>Next.js 14 App Router مع دعم PWA كامل للعمل بدون إنترنت</li>
-                    <li>نظام التنبيهات عبر روابط WhatsApp Direct wa.me المجانية بدون تكلفة</li>
-                    <li>تصدير التقارير والفواتير مباشرة عبر طباعة المتصفح وتنزيل CSV</li>
-                    <li>نشر مجاني دائم على Vercel Hobby Plan مدى الحياة</li>
-                  </ul>
-                </div>
               </div>
             </div>
           )}

@@ -62,41 +62,7 @@ export const DelightSmileAuth: React.FC<DelightSmileAuthProps> = ({ onLoginSucce
 
       const data = await res.json();
       if (!res.ok) {
-        // Fallback for Dr. Omar & admin direct credentials
-        const cleanId = identifier.trim().toLowerCase();
-        if ((cleanId === 'omar' || cleanId === 'dr.omar' || cleanId === '01034366020') && (password === '123' || password === 'pass123' || password === 'omar123')) {
-          const user: AuthUser = {
-            id: 'usr-dentist-1',
-            name: 'د. عمر سالم',
-            role: 'dentist',
-            dentistId: 'dent-1',
-            email: 'omar@delightsmile.com'
-          };
-          onLoginSuccess(user);
-          return;
-        }
-        if ((cleanId === 'admin' || cleanId === 'admin@delightsmile.com') && (password === '123' || password === 'admin123')) {
-          const user: AuthUser = {
-            id: 'usr-admin-1',
-            name: 'د. عمر سالم (المدير العام)',
-            role: 'admin',
-            dentistId: 'dent-1',
-            email: 'admin@delightsmile.com'
-          };
-          onLoginSuccess(user);
-          return;
-        }
-        if ((cleanId === 'reception' || cleanId === 'receptionist') && (password === '123' || password === 'rec123')) {
-          const user: AuthUser = {
-            id: 'usr-rec-1',
-            name: 'موظف الاستقبال',
-            role: 'receptionist',
-            email: 'reception@delightsmile.com'
-          };
-          onLoginSuccess(user);
-          return;
-        }
-        setErrorMsg('بيانات الدخول غير صحيحة. يرجى التحقق من اسم المستخدم وكلمة المرور.');
+        setErrorMsg(data.message || 'بيانات الدخول غير صحيحة. يرجى التحقق من اسم المستخدم وكلمة المرور.');
         setIsLoading(false);
         return;
       }
@@ -104,57 +70,16 @@ export const DelightSmileAuth: React.FC<DelightSmileAuthProps> = ({ onLoginSucce
       const session = data.session;
       const user: AuthUser = {
         id: session.userId || 'usr-dentist-1',
-        name: session.fullName || (session.role === 'admin' ? 'د. عمر سالم (المدير العام)' : 'د. عمر سالم'),
+        name: session.fullName || 'د. عمر سالم',
         role: session.role || 'dentist',
         dentistId: session.dentistId || 'dent-1',
         email: session.email
       };
       onLoginSuccess(user);
     } catch {
-      // Local recovery for admin/doctor
-      const cleanId = identifier.trim().toLowerCase();
-      if (cleanId === 'dr.omar' || cleanId === 'admin' || cleanId === 'omar') {
-        const user: AuthUser = {
-          id: 'usr-dentist-1',
-          name: 'د. عمر سالم',
-          role: 'dentist',
-          dentistId: 'dent-1',
-          email: 'omar@delightsmile.com'
-        };
-        onLoginSuccess(user);
-      } else {
-        setErrorMsg('حدث خطأ في الاتصال بالخادم. يرجى إعادة المحاولة.');
-      }
+      setErrorMsg('حدث خطأ في الاتصال بالخادم. يرجى إعادة المحاولة.');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Quick Preset Logins
-  const handlePresetLogin = (roleType: 'doctor' | 'admin' | 'reception') => {
-    if (roleType === 'doctor') {
-      onLoginSuccess({
-        id: 'usr-dentist-1',
-        name: 'د. عمر سالم',
-        role: 'dentist',
-        dentistId: 'dent-1',
-        email: 'omar@delightsmile.com'
-      });
-    } else if (roleType === 'admin') {
-      onLoginSuccess({
-        id: 'usr-admin-1',
-        name: 'د. عمر سالم (المدير العام)',
-        role: 'admin',
-        dentistId: 'dent-1',
-        email: 'admin@delightsmile.com'
-      });
-    } else {
-      onLoginSuccess({
-        id: 'usr-rec-1',
-        name: 'موظف الاستقبال',
-        role: 'receptionist',
-        email: 'reception@delightsmile.com'
-      });
     }
   };
 
@@ -304,7 +229,7 @@ export const DelightSmileAuth: React.FC<DelightSmileAuthProps> = ({ onLoginSucce
                     required
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="dr.omar أو admin أو البريد الإلكتروني"
+                    placeholder="اسم المستخدم، البريد، أو رقم الهاتف"
                     className="w-full bg-obsidian-950 border border-gold-500/25 rounded-xl pr-10 pl-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-400"
                   />
                 </div>
@@ -344,37 +269,6 @@ export const DelightSmileAuth: React.FC<DelightSmileAuthProps> = ({ onLoginSucce
                   </>
                 )}
               </button>
-
-              {/* Quick One-Click Access for Dr. Omar & Staff */}
-              <div className="pt-3 border-t border-gold-500/15">
-                <p className="text-[11px] text-slate-400 text-center mb-2 font-semibold">الدخول السريع المباشر (للأطباء والإدارة):</p>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => handlePresetLogin('doctor')}
-                    className="p-2 rounded-xl bg-obsidian-950 hover:bg-obsidian-800 border border-gold-500/25 text-gold-300 font-bold transition flex flex-col items-center gap-1"
-                  >
-                    <i className="fa-solid fa-user-doctor text-gold-400 text-sm"></i>
-                    <span>د. عمر سالم</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePresetLogin('admin')}
-                    className="p-2 rounded-xl bg-obsidian-950 hover:bg-obsidian-800 border border-gold-500/25 text-amber-300 font-bold transition flex flex-col items-center gap-1"
-                  >
-                    <i className="fa-solid fa-user-shield text-amber-400 text-sm"></i>
-                    <span>مدير النظام</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePresetLogin('reception')}
-                    className="p-2 rounded-xl bg-obsidian-950 hover:bg-obsidian-800 border border-gold-500/25 text-teal-300 font-bold transition flex flex-col items-center gap-1"
-                  >
-                    <i className="fa-solid fa-bell-concierge text-teal-400 text-sm"></i>
-                    <span>الاستقبال</span>
-                  </button>
-                </div>
-              </div>
             </form>
           )}
 

@@ -2,53 +2,39 @@ import 'package:flutter/foundation.dart';
 import '../models/appointment.dart';
 
 class AppointmentService extends ChangeNotifier {
-  final List<AppointmentModel> _appointments = [
-    AppointmentModel(
-      id: 'APT-101',
-      patientId: 'P-1001',
-      patientName: 'نورهان محمد عبد الرحمن',
-      dentistId: 'dent-1',
-      dentistName: 'د. عمر سالم',
-      roomCode: 'ROOM-1',
-      startsAt: DateTime.now().add(const Duration(days: 1, hours: 2)),
-      endsAt: DateTime.now().add(const Duration(days: 1, hours: 3)),
-      procedureName: 'تركيب عدسات فينير E-Max',
-      status: 'confirmed',
-    ),
-    AppointmentModel(
-      id: 'APT-102',
-      patientId: 'P-1001',
-      patientName: 'نورهان محمد عبد الرحمن',
-      dentistId: 'dent-1',
-      dentistName: 'د. عمر سالم',
-      roomCode: 'ROOM-1',
-      startsAt: DateTime.now().add(const Duration(days: 5, hours: 4)),
-      endsAt: DateTime.now().add(const Duration(days: 5, hours: 5)),
-      procedureName: 'متابعة الزراعة والمقاسات',
-      status: 'confirmed',
-    ),
-  ];
+  final List<AppointmentModel> _appointments = [];
 
   List<AppointmentModel> get appointments => List.unmodifiable(_appointments);
 
   List<String> getAvailableSlots(String dentistId, DateTime date) {
-    // 30-minute working slots 10:00 to 20:00
-    final allSlots = [
-      '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
-      '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
-      '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM',
-      '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM',
-      '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM'
-    ];
+    // Friday is completely closed
+    if (date.weekday == DateTime.friday) {
+      return [];
+    }
 
-    // Check for overlap
-    return allSlots.where((slot) {
-      if (slot == '12:00 PM' && dentistId == 'dent-1') {
-        // Blocked for existing booking
-        return false;
-      }
-      return true;
-    }).toList();
+    // Saturday, Monday, Wednesday: 12:00 PM - 06:00 PM
+    if (date.weekday == DateTime.saturday ||
+        date.weekday == DateTime.monday ||
+        date.weekday == DateTime.wednesday) {
+      return [
+        '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
+        '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM',
+        '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM'
+      ];
+    }
+
+    // Sunday, Tuesday, Thursday: 04:00 PM - 10:00 PM
+    if (date.weekday == DateTime.sunday ||
+        date.weekday == DateTime.tuesday ||
+        date.weekday == DateTime.thursday) {
+      return [
+        '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM',
+        '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM',
+        '08:00 PM', '08:30 PM', '09:00 PM', '09:30 PM'
+      ];
+    }
+
+    return [];
   }
 
   Future<AppointmentModel> bookAppointment({

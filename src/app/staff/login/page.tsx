@@ -40,83 +40,22 @@ function StaffLoginForm() {
 
       const data = await res.json();
       if (!res.ok) {
-        // Fallback for authorized clinic credentials
-        const cleanId = identifier.trim().toLowerCase();
-        if ((cleanId === 'omar' || cleanId === 'dr.omar' || cleanId === '01034366020') && (password === '123' || password === 'omar123' || password === 'pass123')) {
-          completeLogin({
-            userId: 'usr-dentist-1',
-            fullName: 'د. عمر سالم',
-            role: 'dentist',
-            token: 'valid_doctor_token_' + Date.now(),
-            email: 'omar@delightsmile.com'
-          });
-          return;
-        }
-        if ((cleanId === 'admin' || cleanId === 'admin@delightsmile.com') && (password === '123' || password === 'admin123')) {
-          completeLogin({
-            userId: 'usr-admin-1',
-            fullName: 'د. عمر سالم (المدير العام)',
-            role: 'admin',
-            token: 'valid_admin_token_' + Date.now(),
-            email: 'admin@delightsmile.com'
-          });
-          return;
-        }
-        if ((cleanId === 'reception' || cleanId === 'receptionist') && (password === '123' || password === 'rec123')) {
-          completeLogin({
-            userId: 'usr-rec-1',
-            fullName: 'موظف الاستقبال',
-            role: 'receptionist',
-            token: 'valid_rec_token_' + Date.now(),
-            email: 'reception@delightsmile.com'
-          });
-          return;
-        }
-
-        setErrorMsg('بيانات الدخول غير صحيحة. يرجى مراجعة إدارة العيادة.');
+        setErrorMsg(data.message || 'بيانات الدخول غير صحيحة. يرجى مراجعة إدارة العيادة.');
         setIsLoading(false);
         return;
       }
 
       completeLogin({
-        userId: data.session?.userId || 'usr-dentist-1',
-        fullName: data.session?.fullName || 'د. عمر سالم',
-        role: data.session?.role || 'dentist',
-        token: data.session?.token || ('session_' + Date.now()),
-        email: data.session?.email
+        userId: data.session.userId,
+        fullName: data.session.fullName,
+        role: data.session.role,
+        token: data.session.token,
+        email: data.session.email
       });
     } catch {
       setErrorMsg('حدث خطأ في الاتصال بنظام العيادة. يرجى إعادة المحاولة.');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleQuickLogin = (role: 'dentist' | 'admin' | 'receptionist') => {
-    if (role === 'dentist') {
-      completeLogin({
-        userId: 'usr-dentist-1',
-        fullName: 'د. عمر سالم',
-        role: 'dentist',
-        token: 'quick_doctor_' + Date.now(),
-        email: 'omar@delightsmile.com'
-      });
-    } else if (role === 'admin') {
-      completeLogin({
-        userId: 'usr-admin-1',
-        fullName: 'د. عمر سالم (المدير العام)',
-        role: 'admin',
-        token: 'quick_admin_' + Date.now(),
-        email: 'admin@delightsmile.com'
-      });
-    } else {
-      completeLogin({
-        userId: 'usr-rec-1',
-        fullName: 'موظف الاستقبال',
-        role: 'receptionist',
-        token: 'quick_rec_' + Date.now(),
-        email: 'reception@delightsmile.com'
-      });
     }
   };
 
@@ -131,7 +70,7 @@ function StaffLoginForm() {
             required
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
-            placeholder="dr.omar أو admin أو البريد المهني"
+            placeholder="اسم المستخدم، البريد، أو رقم الهاتف"
             className="w-full bg-obsidian-950 border border-gold-500/25 rounded-xl pr-10 pl-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-400"
           />
         </div>
@@ -182,35 +121,9 @@ function StaffLoginForm() {
         )}
       </button>
 
-      {/* Quick Access for Dr. Omar & Staff Testing */}
-      <div className="pt-3 border-t border-gold-500/15">
-        <p className="text-[11px] text-slate-400 text-center mb-2 font-semibold">الدخول المباشر المعتمد:</p>
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <button
-            type="button"
-            onClick={() => handleQuickLogin('dentist')}
-            className="p-2 rounded-xl bg-obsidian-950 hover:bg-obsidian-800 border border-gold-500/25 text-gold-300 font-bold transition flex flex-col items-center gap-1"
-          >
-            <i className="fa-solid fa-user-doctor text-gold-400 text-sm"></i>
-            <span>د. عمر سالم</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickLogin('admin')}
-            className="p-2 rounded-xl bg-obsidian-950 hover:bg-obsidian-800 border border-gold-500/25 text-amber-300 font-bold transition flex flex-col items-center gap-1"
-          >
-            <i className="fa-solid fa-user-shield text-amber-400 text-sm"></i>
-            <span>مدير النظام</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickLogin('receptionist')}
-            className="p-2 rounded-xl bg-obsidian-950 hover:bg-obsidian-800 border border-gold-500/25 text-teal-300 font-bold transition flex flex-col items-center gap-1"
-          >
-            <i className="fa-solid fa-bell-concierge text-teal-400 text-sm"></i>
-            <span>الاستقبال</span>
-          </button>
-        </div>
+      <div className="pt-2 text-center text-[11px] text-slate-500">
+        <i className="fa-solid fa-shield-halved ml-1 text-gold-400/70"></i>
+        <span>نظام تسجيل دخول مشفر وآمن مخصص لأطباء وإدارة عيادة Delight Smile</span>
       </div>
     </form>
   );
